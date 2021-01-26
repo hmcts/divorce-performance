@@ -1,0 +1,20 @@
+#!groovy
+
+properties([
+        pipelineTriggers([cron('00 21 * * *')])
+])
+
+@Library("Infrastructure") _
+
+def product = "div"
+def component = "petition"
+
+withNightlyPipeline("java", product, component) {
+
+    enablePerformanceTest()
+
+    after('performanceTest') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: 'functional-output/**/*'
+    }
+
+}
