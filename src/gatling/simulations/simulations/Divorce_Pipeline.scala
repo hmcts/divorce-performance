@@ -24,7 +24,8 @@ class Divorce_Pipeline extends Simulation {
         CreateUser.CreateCitizen,
         Homepage.NFDHomepage,
         Login.NFDLogin,
-        DivorceApp_1PetitionerScreening.DivorceApplication,
+        DivorceApp_1PetitionerScreening.ScreeningQuestions,
+        DivorceApp_2PetitionerApplication.ApplicationQuestions,
         Logout.NFDLogout)
     }
     .exec(DeleteUser.DeleteCitizen)

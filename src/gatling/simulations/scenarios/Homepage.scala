@@ -24,7 +24,7 @@ object Homepage {
         .headers(CommonHeader)
         .header("sec-fetch-site", "none")
         .check(CsrfCheck.save)
-        .check(css(".form-group>input[name='state']", "value").saveAs("state"))
+        .check(regex("state=([0-9a-z-]+)&").saveAs("state"))
         .check(substring("Sign in or create an account")))
 
     }

@@ -2,13 +2,15 @@ package scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import utils.{Environment, Common}
+import utils.{Common, Environment, CsrfCheck}
 
 import scala.concurrent.duration._
+import scala.util.Random
 
 object DivorceApp_2PetitionerApplication {
 
   val BaseURL = Environment.baseURL
+  val PaymentURL = Environment.paymentURL
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
@@ -16,9 +18,13 @@ object DivorceApp_2PetitionerApplication {
   val CommonHeader = Environment.commonHeader
   val PostHeader = Environment.postHeader
 
-  val AboutYourMarriage = {
+  val postcodeFeeder = csv("postcodes.csv").random
 
-    //Generate random petitioner and respondent names, and set separation date
+  val rnd = new Random()
+
+  val ApplicationQuestions = {
+
+    //Generate petitioner and respondent names and separation date
     exec {
       session =>
         session
@@ -173,17 +179,18 @@ object DivorceApp_2PetitionerApplication {
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     .group("DivorceApp_170_AddressPostcodeSubmit") {
-      exec(http("Address Postcode")
-        .post(BaseURL + "/petitioner-respondent/address")
-        .headers(CommonHeader)
-        .headers(PostHeader)
-        .formParam("_csrf", "${csrf}")
-        .formParam("postcode", "HA8 7ST")
-        .formParam("addressType", "postcode")
-        .formParam("searchPostcode", "true")
-        .formParam("addressConfirmed", "false")
-        .check(substring("Pick an address"))
-        .check(regex("<option value=0 >1, CANONS COURT, STONEGROVE, EDGWARE, HA8 7ST</option>")))
+      feed(postcodeFeeder)
+        .exec(http("Address Postcode")
+          .post(BaseURL + "/petitioner-respondent/address")
+          .headers(CommonHeader)
+          .headers(PostHeader)
+          .formParam("_csrf", "${csrf}")
+          .formParam("postcode", "${postcode}")
+          .formParam("addressType", "postcode")
+          .formParam("searchPostcode", "true")
+          .formParam("addressConfirmed", "false")
+          .check(substring("Pick an address"))
+          .check(regex("<option value=([0-9]+) >").findRandom.saveAs("randomAddressIndex")))
     }
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
@@ -194,12 +201,12 @@ object DivorceApp_2PetitionerApplication {
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
-        .formParam("selectAddressIndex", "0")
+        .formParam("selectAddressIndex", "${randomAddressIndex}")
         .formParam("selectAddress", "true")
         .formParam("searchPostcode", "false")
         .formParam("addressConfirmed", "false")
-        .formParam("postcode", "HA8 7ST")
-        .check(substring("Address Line 0")))
+        .formParam("postcode", "${postcode}")
+        .check(regex("""<input class="govuk-input" type="text" id="addressLine." name="addressLine." value="(.+)"""").findAll.saveAs("addressLines")))
     }
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
@@ -210,13 +217,13 @@ object DivorceApp_2PetitionerApplication {
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
-        .formParam("addressLine0", "1, STONEGROVE")
-        .formParam("addressLine1", "CANONS COURT")
-        .formParam("addressLine2", "EDGWARE")
-        .formParam("addressLine3", "HA8 7ST")
+        .formParam("addressLine0", "${addressLines(0)}")
+        .formParam("addressLine1", "${addressLines(1)}")
+        .formParam("addressLine2", "${addressLines(2)}")
+        .formParam("addressLine3", "${addressLines(3)}")
         .formParam("addressType", "postcode")
         .formParam("addressConfirmed", "true")
-        .formParam("postcode", "HA8 7ST")
+        .formParam("postcode", "${postcode}")
         .check(substring("Do you want your divorce papers sent to this address")))
     }
 
@@ -340,6 +347,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("_csrf", "${csrf}")
         .formParam("claimsCosts", "No")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("Upload your documents")))
     }
 
@@ -348,9 +356,21 @@ object DivorceApp_2PetitionerApplication {
     .group("DivorceApp_290_DocumentUpload") {
       exec(http("Document Upload")
         .post(BaseURL + "/petitioner-respondent/marriage-certificate-upload?js=true&_csrf=${csrf}")
-        .headers(CommonHeader)
-        .headers(PostHeader)
-        //do something here to upload document!
+        .header("accept", "application/json")
+        .header("accept-encoding", "gzip, deflate, br")
+        .header("accept-language", "en-GB,en;q=0.9")
+        .header("content-type", "multipart/form-data")
+        .header("sec-fetch-dest", "empty")
+        .header("sec-fetch-mode", "cors")
+        .header("sec-fetch-site", "same-origin")
+        .header("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36")
+        .header("x-requested-with", "XMLHttpRequest")
+        .bodyPart(RawFileBodyPart("file", "2MB.pdf")
+          .fileName("2MB.pdf")
+          .transferEncoding("binary"))
+        .asMultipartForm
+        .check(status.is(200))
+        .check(currentLocation.is(BaseURL + "/petitioner-respondent/marriage-certificate-upload"))
         .check(substring(""""status:"OK"""")))
     }
 
@@ -372,6 +392,7 @@ object DivorceApp_2PetitionerApplication {
       exec(http("Check Your Answers")
         .get(BaseURL + "/check-your-answers")
         .headers(CommonHeader)
+        .check(CsrfCheck.save)
         .check(substring("Check your answers")))
     }
 
@@ -397,63 +418,68 @@ object DivorceApp_2PetitionerApplication {
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
         .formParam("submit", "Continue")
-        .check(substring("Enter card details")))
+        .check(substring("Enter card details"))
+        .check(css("input[name='csrfToken']", "value").saveAs("csrf"))
+        .check(css("input[name='chargeId']", "value").saveAs("ChargeId")))
     }
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_340_EnterCardDetails") {
+    .group("DivorceApp_340_CheckCard") {
 
       exec(http("Check Card")
-        .post("https://www.payments.service.gov.uk/check_card/ps8al5n2vsg4ublqr7pt77on7q")
+        .post(PaymentURL + "/card_details/${ChargeId}")
         .headers(CommonHeader)
         .headers(PostHeader)
         .header("sec-fetch-dest", "empty")
         .header("sec-fetch-mode", "cors")
-        .formParam("cardNo", "4444333322221111"))
+        .formParam("cardNo", "4444333322221111")
+        .check(jsonPath("$.accepted").is("true")))
 
-      .exec(http("Card Details")
-        .post("https://www.payments.service.gov.uk/card_details/ps8al5n2vsg4ublqr7pt77on7q")
-        .headers(CommonHeader)
-        .headers(PostHeader)
-        /*
-        chargeId: ps8al5n2vsg4ublqr7pt77on7q
-        csrfToken: yHTilbxL-Bmiwku7qifwN3Z6XiMA2qlv952g
-        cardNo: 4444333322221111
-        expiryMonth: 01
-        expiryYear: 22
-        cardholderName: Mr Perf Test
-        cvc: 123
-        addressCountry: GB
-        addressLine1: 1 Perf Test Road
-        addressLine2:
-        addressCity: Perf Test Town
-        addressPostcode: HA8 7ST
-        email: kljdlfjhkjdshfd@dsfljldhjsfjkhs.com
-         */
-        .check(substring("Confirm your payment")))
     }
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_340_ConfirmPayment") {
-      exec(http("Confirm Payment")
-        .post("https://www.payments.service.gov.uk/card_details/ps8al5n2vsg4ublqr7pt77on7q/confirm")
+    .group("DivorceApp_350_CardDetailsSubmit") {
+
+      exec(http("Card Details")
+        .post(PaymentURL + "/card_details/${ChargeId}")
         .headers(CommonHeader)
         .headers(PostHeader)
-        /*
-        csrfToken: m5hg25le-sLSH2N1VioMELqPOSyA0ZS35780
-        chargeId: ps8al5n2vsg4ublqr7pt77on7q
-         */
-        /* APPLICATION NUMBER:
+        .formParam("chargeId", "${ChargeId}")
+        .formParam("csrfToken", "${csrf}")
+        .formParam("cardNo", "4444333322221111")
+        .formParam("expiryMonth", Common.getMonth())
+        .formParam("expiryYear", "23")
+        .formParam("cardholderName", "Perf Tester" + Common.randomString(5))
+        .formParam("cvc", (100 + rnd.nextInt(900)).toString())
+        .formParam("addressCountry", "GB")
+        .formParam("addressLine1", rnd.nextInt(1000).toString + " Perf" + Common.randomString(5) + " Road")
+        .formParam("addressLine2", "")
+        .formParam("addressCity", "Perf " + Common.randomString(5) + " Town")
+        .formParam("addressPostcode", "PR1 1RF") //Common.getPostcode()
+        .formParam("email", "probate@perftest" + Common.randomString(8) + ".com")
+        .check(regex("Confirm your payment"))
+        .check(css("input[name='csrfToken']", "value").saveAs("csrf")))
+    }
 
-              <strong class="govuk-body-reference-number" aria-label="1 6 1 1 6 8 5 9 6 8 5 2 2 1 9 0">
-        1611 &#8208; 6859 &#8208; 6852 &#8208; 2190
-      </strong>
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-
-         */
+    .group("DivorceApp_360_ConfirmPayment") {
+      exec(http("Confirm Payment")
+        .post(PaymentURL + "/card_details/${ChargeId}/confirm")
+        .headers(CommonHeader)
+        .headers(PostHeader)
+        .formParam("chargeId", "${ChargeId}")
+        .formParam("csrfToken", "${csrf}")
+        .check(regex(""""govuk-body-reference-number" aria-label="([0-9 ]+)"""").find.transform(str => str.replace(" ", "")).saveAs("appId"))
         .check(substring("Application complete")))
+    }
+
+    .exec {
+      session =>
+        println("APPLICATION ID: " + session("appId").as[String])
+        session
     }
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)

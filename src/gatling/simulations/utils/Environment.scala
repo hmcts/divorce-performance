@@ -8,9 +8,10 @@ object Environment {
   val baseURL = "https://petitioner-frontend-aks.aat.platform.hmcts.net"
   val idamURL = "https://idam-web-public.aat.platform.hmcts.net"
   val idamAPIURL = "https://idam-api.aat.platform.hmcts.net"
+  val paymentURL = "https://www.payments.service.gov.uk"
 
   val minThinkTime = 1
-  val maxThinkTime = 2
+  val maxThinkTime = 1
 
   val HttpProtocol = http
 
