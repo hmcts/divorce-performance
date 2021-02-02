@@ -8,27 +8,45 @@ import utils.Environment
 
 class Divorce_Pipeline extends Simulation {
 
-  val BaseURL = Environment.baseURL
-
   val httpProtocol = Environment.HttpProtocol
-    .baseUrl(BaseURL)
     .doNotTrackHeader("1")
     .inferHtmlResources()
     .silentResources
 
   val NFDSimulation = scenario( "NFDSimulation")
+
     .exitBlockOnFail {
       exec(flushHttpCache)
       .exec(flushCookieJar)
+
+      /* PETITIONER CREATES A NEW APPLICATION */
       .exec(
-        CreateUser.CreateCitizen,
-        Homepage.NFDHomepage,
-        Login.NFDLogin,
+        CreateUser.CreateCitizen("Petitioner"),
+        Homepage.NFDHomepage(Environment.petitionerURL, "Petitioner"),
+        Login.NFDLogin(Environment.petitionerURL, "Petitioner"),
         DivorceApp_1PetitionerScreening.ScreeningQuestions,
         DivorceApp_2PetitionerApplication.ApplicationQuestions,
-        Logout.NFDLogout)
+        Logout.NFDLogout(Environment. petitionerURL, "Petitioner"))
+      .exec(flushHttpCache)
+      .exec(flushCookieJar)
+
+      /* RESPONDENT RESPONDS TO THE APPLICATION */
+      .exec(
+        CreateUser.CreateCitizen("Respondent"),
+        Homepage.NFDHomepage(Environment.respondentURL, "Respondent"),
+        Login.NFDLogin(Environment.respondentURL, "Respondent"),
+        Logout.NFDLogout(Environment.respondentURL, "Respondent"))
+      .exec(flushHttpCache)
+      .exec(flushCookieJar)
+
     }
-    .exec(DeleteUser.DeleteCitizen)
+    //delete the petitioner and respondent accounts
+    .doIf("${PetitionerEmailAddress.exists()}") {
+      exec(DeleteUser.DeleteCitizen("${PetitionerEmailAddress}"))
+    }
+    .doIf("${RespondentEmailAddress.exists()}") {
+      exec(DeleteUser.DeleteCitizen("${RespondentEmailAddress}"))
+    }
 
   setUp(
     NFDSimulation.inject(atOnceUsers(1))

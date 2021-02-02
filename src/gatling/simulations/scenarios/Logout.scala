@@ -6,19 +6,29 @@ import utils.Environment
 
 object Logout {
 
-  val BaseURL = Environment.baseURL
-
   val CommonHeader = Environment.commonHeader
 
-  val NFDLogout =
+  // allows the logout code to be re-used for the different divorce front-ends (Petitioner, Respondent, DN, DA),
+  // by passing through the BaseURL required and name of the app
+  def NFDLogout(BaseURL: String, appName: String) = {
 
-    group("Divorce_999_Logout") {
+    doIfOrElse(appName.equals("Petitioner")) {
+      exec(_.set("suffix", "sign-out"))
+    } {
+      doIf(appName.equals("Respondent")) {
+        exec(_.set("suffix", "end"))
+      }
+    }
 
-      exec(http("Logout")
-        .get(BaseURL + "/logout")
+    .group(s"Divorce_999_${appName}_Logout") {
+
+      exec(http(s"Logout from ${appName}")
+        .get(s"${BaseURL}" + "/${suffix}")
         .headers(CommonHeader)
-        .check(substring("Sign in or create an account")))
+        .check(regex("Sign in or create an account|You’ve been signed out")))
 
     }
+
+  }
 
 }

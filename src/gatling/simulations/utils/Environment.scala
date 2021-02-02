@@ -5,9 +5,14 @@ import io.gatling.http.Predef._
 
 object Environment {
 
-  val baseURL = "https://petitioner-frontend-aks.aat.platform.hmcts.net"
+  val petitionerURL = "https://petitioner-frontend-aks.aat.platform.hmcts.net"
+  val respondentURL = "https://respond-divorce-aks.aat.platform.hmcts.net"
+  val decreeNisiURL = "https://decree-nisi-aks.aat.platform.hmcts.net"
+  val decreeAbsoluteURL = "https://decree-absolute-aks.aat.platform.hmcts.net"
+
   val idamURL = "https://idam-web-public.aat.platform.hmcts.net"
   val idamAPIURL = "https://idam-api.aat.platform.hmcts.net"
+
   val paymentURL = "https://www.payments.service.gov.uk"
 
   val minThinkTime = 1

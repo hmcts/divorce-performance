@@ -8,7 +8,7 @@ import scala.concurrent.duration._
 
 object DivorceApp_1PetitionerScreening {
 
-  val BaseURL = Environment.baseURL
+  val PetitionerURL = Environment.petitionerURL
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
@@ -20,7 +20,7 @@ object DivorceApp_1PetitionerScreening {
 
     group("DivorceApp_010_LanguagePrefSubmit") {
       exec(http("Language Preference")
-        .post(BaseURL + "/screening-questions/language-preference")
+        .post(PetitionerURL + "/screening-questions/language-preference")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -33,7 +33,7 @@ object DivorceApp_1PetitionerScreening {
 
     .group("DivorceApp_020_MarriageBrokenDownSubmit") {
       exec(http("Marriage Broken")
-        .post(BaseURL + "/screening-questions/has-marriage-broken")
+        .post(PetitionerURL + "/screening-questions/has-marriage-broken")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -46,7 +46,7 @@ object DivorceApp_1PetitionerScreening {
 
     .group("DivorceApp_030_RespondentAddressSubmit") {
       exec(http("Respondent Address")
-        .post(BaseURL + "/screening-questions/respondent-address")
+        .post(PetitionerURL + "/screening-questions/respondent-address")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -59,7 +59,7 @@ object DivorceApp_1PetitionerScreening {
 
     .group("DivorceApp_040_MarriageCertificateSubmit") {
       exec(http("Marriage Certificate")
-        .post(BaseURL + "/screening-questions/marriage-certificate")
+        .post(PetitionerURL + "/screening-questions/marriage-certificate")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -72,7 +72,7 @@ object DivorceApp_1PetitionerScreening {
 
     .group("DivorceApp_050_FinancialRemedySubmit") {
       exec(http("Financial Remedy")
-        .post(BaseURL + "/screening-questions/financial-remedy")
+        .post(PetitionerURL + "/screening-questions/financial-remedy")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -84,7 +84,7 @@ object DivorceApp_1PetitionerScreening {
 
     .group("DivorceApp_060_NeedHelpSubmit") {
       exec(http("Need Help")
-        .post(BaseURL + "/pay/help/need-help")
+        .post(PetitionerURL + "/pay/help/need-help")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")

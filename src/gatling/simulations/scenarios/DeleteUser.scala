@@ -8,10 +8,13 @@ object DeleteUser {
 
   val IdamAPIURL = Environment.idamAPIURL
 
-  val DeleteCitizen =
+  def DeleteCitizen (emailAddressToDelete: String)= {
+
     group("Divorce_000_DeleteCitizen") {
       exec(http("DeleteCitizen")
-        .delete(IdamAPIURL + "/testing-support/accounts/${emailAddress}")
+        .delete(IdamAPIURL + s"/testing-support/accounts/${emailAddressToDelete}")
         .check(status.is(204)))
     }
+
+  }
 }

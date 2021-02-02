@@ -14,7 +14,8 @@ object CreateUser {
     "role" -> "citizen"
   ))
 
-  val CreateCitizen =
+  //takes an userType e.g. petitioner/respondent, to create unique users for each user
+  def CreateCitizen(userType: String) = {
     feed(newUserFeeder)
       .group("Divorce_000_CreateCitizen") {
         exec(http("CreateCitizen")
@@ -23,12 +24,21 @@ object CreateUser {
           .check(status.is(201)))
       }
 
+    //storing each username/password in the session to be used later (for re-logging in and deleting accounts)
+    .exec {
+      session =>
+        session
+          .set(s"${userType}EmailAddress", session("emailAddress").as[String])
+          .set(s"${userType}Password", session("password").as[String])
+    }
+
       .exec {
         session =>
-          println("EMAIL: " + session("emailAddress").as[String])
-          println("PASSWORD: " + session("password").as[String])
-          println("ROLE: " + session("role").as[String])
+          println(s"${userType} Email: " + session(s"${userType}EmailAddress").as[String])
+          println(s"${userType} Password: " + session(s"${userType}Password").as[String])
+          println(s"${userType} Role: " + session("role").as[String])
           session
       }
+  }
 
 }

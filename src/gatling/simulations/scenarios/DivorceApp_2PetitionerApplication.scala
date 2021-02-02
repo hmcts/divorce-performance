@@ -9,7 +9,7 @@ import scala.util.Random
 
 object DivorceApp_2PetitionerApplication {
 
-  val BaseURL = Environment.baseURL
+  val PetitionerURL = Environment.petitionerURL
   val PaymentURL = Environment.paymentURL
 
   val MinThinkTime = Environment.minThinkTime
@@ -39,7 +39,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_070_DetailsSubmit") {
       exec(http("Details")
-        .post(BaseURL + "/about-your-marriage/details")
+        .post(PetitionerURL + "/about-your-marriage/details")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -53,7 +53,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_080_DateOfMarriageSubmit") {
       exec(http("Date Of Marriage")
-        .post(BaseURL + "/about-your-marriage/date-of-marriage-certificate")
+        .post(PetitionerURL + "/about-your-marriage/date-of-marriage-certificate")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -68,7 +68,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_090_InTheUKSubmit") {
       exec(http("In The UK")
-        .post(BaseURL + "/about-your-marriage/in-the-uk")
+        .post(PetitionerURL + "/about-your-marriage/in-the-uk")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -81,7 +81,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_100_HabitualResidenceSubmit") {
       exec(http("Habitual Residence")
-        .post(BaseURL + "/jurisdiction/habitual-residence")
+        .post(PetitionerURL + "/jurisdiction/habitual-residence")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -95,7 +95,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_110_InterstitialSubmit") {
       exec(http("Interstitial")
-        .post(BaseURL + "/jurisdiction/interstitial")
+        .post(PetitionerURL + "/jurisdiction/interstitial")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -108,7 +108,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_120_ConfidentialSubmit") {
       exec(http("Confidential")
-        .post(BaseURL + "/petitioner-respondent/confidential")
+        .post(PetitionerURL + "/petitioner-respondent/confidential")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -121,7 +121,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_130_NamesSubmit") {
       exec(http("Names")
-        .post(BaseURL + "/petitioner-respondent/names")
+        .post(PetitionerURL + "/petitioner-respondent/names")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -137,7 +137,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_140_NamesOnCertSubmit") {
       exec(http("Names On Certificate")
-        .post(BaseURL + "/petitioner-respondent/names-on-certificate")
+        .post(PetitionerURL + "/petitioner-respondent/names-on-certificate")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -151,7 +151,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_150_ChangedNameSubmit") {
       exec(http("Changed Name")
-        .post(BaseURL + "/petitioner-respondent/changed-name")
+        .post(PetitionerURL + "/petitioner-respondent/changed-name")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -165,7 +165,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_160_ContactDetailsSubmit") {
       exec(http("Contact Details")
-        .post(BaseURL + "/petitioner-respondent/contact-details")
+        .post(PetitionerURL + "/petitioner-respondent/contact-details")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -181,7 +181,7 @@ object DivorceApp_2PetitionerApplication {
     .group("DivorceApp_170_AddressPostcodeSubmit") {
       feed(postcodeFeeder)
         .exec(http("Address Postcode")
-          .post(BaseURL + "/petitioner-respondent/address")
+          .post(PetitionerURL + "/petitioner-respondent/address")
           .headers(CommonHeader)
           .headers(PostHeader)
           .formParam("_csrf", "${csrf}")
@@ -197,7 +197,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_180_AddressChooseSubmit") {
       exec(http("Address Choose")
-        .post(BaseURL + "/petitioner-respondent/address")
+        .post(PetitionerURL + "/petitioner-respondent/address")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -213,14 +213,15 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_190_AddressSubmit") {
       exec(http("Address")
-        .post(BaseURL + "/petitioner-respondent/address")
+        .post(PetitionerURL + "/petitioner-respondent/address")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
         .formParam("addressLine0", "${addressLines(0)}")
         .formParam("addressLine1", "${addressLines(1)}")
         .formParam("addressLine2", "${addressLines(2)}")
-        .formParam("addressLine3", "${addressLines(3)}")
+        //.formParam("addressLine3", "${addressLines(3)}") //removing this as not all postcodes return 4 lines
+        .formParam("addressLine3", "")
         .formParam("addressType", "postcode")
         .formParam("addressConfirmed", "true")
         .formParam("postcode", "${postcode}")
@@ -231,7 +232,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_200_UseHomeAddressSubmit") {
       exec(http("Use Home Address")
-        .post(BaseURL + "/petitioner-respondent/petitioner-correspondence/use-home-address")
+        .post(PetitionerURL + "/petitioner-respondent/petitioner-correspondence/use-home-address")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -244,7 +245,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_210_LiveTogetherSubmit") {
       exec(http("Live Together")
-        .post(BaseURL + "/petitioner-respondent/live-together")
+        .post(PetitionerURL + "/petitioner-respondent/live-together")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -257,7 +258,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_220_UseHomeAddressSubmit") {
       exec(http("Use Home Address")
-        .post(BaseURL + "/petitioner-respondent/respondent-correspondence/use-home-address")
+        .post(PetitionerURL + "/petitioner-respondent/respondent-correspondence/use-home-address")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -270,7 +271,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_230_ReasonSubmit") {
       exec(http("Reason")
-        .post(BaseURL + "/about-divorce/reason-for-divorce/reason")
+        .post(PetitionerURL + "/about-divorce/reason-for-divorce/reason")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -283,7 +284,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_240_SeparationDatesSubmit") {
       exec(http("Separation Dates")
-        .post(BaseURL + "/about-divorce/reason-for-divorce/separation-dates")
+        .post(PetitionerURL + "/about-divorce/reason-for-divorce/separation-dates")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -301,7 +302,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_250_LivedApartSinceSubmit") {
       exec(http("Lived Apart Since")
-        .post(BaseURL + "/about-divorce/reason-for-divorce/separation/lived-apart-since")
+        .post(PetitionerURL + "/about-divorce/reason-for-divorce/separation/lived-apart-since")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -314,7 +315,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_260_LegalProceedingsSubmit") {
       exec(http("Legal Proceedings")
-        .post(BaseURL + "/about-divorce/legal-proceedings")
+        .post(PetitionerURL + "/about-divorce/legal-proceedings")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -328,7 +329,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_270_FinancialArrangementsSubmit") {
       exec(http("Financial Arrangements")
-        .post(BaseURL + "/about-divorce/financial/arrangements")
+        .post(PetitionerURL + "/about-divorce/financial/arrangements")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -341,7 +342,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_280_ClaimCostsSubmit") {
       exec(http("Claim Costs")
-        .post(BaseURL + "/about-divorce/claim-costs")
+        .post(PetitionerURL + "/about-divorce/claim-costs")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -355,7 +356,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_290_DocumentUpload") {
       exec(http("Document Upload")
-        .post(BaseURL + "/petitioner-respondent/marriage-certificate-upload?js=true&_csrf=${csrf}")
+        .post(PetitionerURL + "/petitioner-respondent/marriage-certificate-upload?js=true&_csrf=${csrf}")
         .header("accept", "application/json")
         .header("accept-encoding", "gzip, deflate, br")
         .header("accept-language", "en-GB,en;q=0.9")
@@ -370,27 +371,27 @@ object DivorceApp_2PetitionerApplication {
           .transferEncoding("binary"))
         .asMultipartForm
         .check(status.is(200))
-        .check(currentLocation.is(BaseURL + "/petitioner-respondent/marriage-certificate-upload"))
-        .check(substring(""""status:"OK"""")))
+        .check(currentLocation.is(PetitionerURL + "/petitioner-respondent/marriage-certificate-upload?js=true&_csrf=${csrf}"))
+        .check(regex("status.:.OK")))
     }
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     .group("DivorceApp_300_DocumentUploadSubmit") {
       exec(http("Document Upload")
-        .post(BaseURL + "/petitioner-respondent/marriage-certificate-upload")
+        .post(PetitionerURL + "/petitioner-respondent/marriage-certificate-upload")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
         .formParam("submit", "Continue")
-        .check(substring("Check your answers|Equality and diversity questions")))
+        .check(regex("Check your answers|Equality and diversity questions")))
     }
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
     .group("DivorceApp_310_CheckYourAnswers") {
       exec(http("Check Your Answers")
-        .get(BaseURL + "/check-your-answers")
+        .get(PetitionerURL + "/check-your-answers")
         .headers(CommonHeader)
         .check(CsrfCheck.save)
         .check(substring("Check your answers")))
@@ -400,7 +401,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_320_CheckYourAnswersSubmit") {
       exec(http("Check Your Answers")
-        .post(BaseURL + "/check-your-answers")
+        .post(PetitionerURL + "/check-your-answers")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -413,7 +414,7 @@ object DivorceApp_2PetitionerApplication {
 
     .group("DivorceApp_330_ProceedToPayment") {
       exec(http("Proceed To Payment")
-        .post(BaseURL + "/pay/online")
+        .post(PetitionerURL + "/pay/online")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
@@ -428,7 +429,7 @@ object DivorceApp_2PetitionerApplication {
     .group("DivorceApp_340_CheckCard") {
 
       exec(http("Check Card")
-        .post(PaymentURL + "/card_details/${ChargeId}")
+        .post(PaymentURL + "/check_card/${ChargeId}")
         .headers(CommonHeader)
         .headers(PostHeader)
         .header("sec-fetch-dest", "empty")
