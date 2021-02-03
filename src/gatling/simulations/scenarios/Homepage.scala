@@ -19,7 +19,7 @@ object Homepage {
       group(s"Divorce_001_${appName}_HomePage") {
 
         exec(http(s"Load ${appName} Homepage")
-          .get(s"${BaseURL}/")
+          .get(BaseURL + "/")
           .headers(CommonHeader)
           .header("sec-fetch-site", "none")
           .check(CsrfCheck.save)

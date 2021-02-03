@@ -22,11 +22,11 @@ object Common {
   }
 
   def getDay(): String = {
-    (1 + rnd.nextInt(28)).toString.format(patternDay)
+    (1 + rnd.nextInt(28)).toString.format(patternDay).reverse.padTo(2, '0').reverse
   }
 
   def getMonth(): String = {
-    (1 + rnd.nextInt(12)).toString.format(patternMonth)
+    (1 + rnd.nextInt(12)).toString.format(patternMonth).reverse.padTo(2, '0').reverse
   }
 
   //15-39 years ago

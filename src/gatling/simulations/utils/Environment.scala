@@ -13,6 +13,8 @@ object Environment {
   val idamURL = "https://idam-web-public.aat.platform.hmcts.net"
   val idamAPIURL = "https://idam-api.aat.platform.hmcts.net"
 
+  val divorceAPIURL = "http://div-cms-aat.service.core-compute-aat.internal"
+
   val paymentURL = "https://www.payments.service.gov.uk"
 
   val minThinkTime = 1

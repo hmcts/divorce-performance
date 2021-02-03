@@ -32,13 +32,13 @@ object CreateUser {
           .set(s"${userType}Password", session("password").as[String])
     }
 
-      .exec {
-        session =>
-          println(s"${userType} Email: " + session(s"${userType}EmailAddress").as[String])
-          println(s"${userType} Password: " + session(s"${userType}Password").as[String])
-          println(s"${userType} Role: " + session("role").as[String])
-          session
-      }
+    .exec {
+      session =>
+        println(s"${userType} Email: " + session(s"${userType}EmailAddress").as[String])
+        println(s"${userType} Password: " + session(s"${userType}Password").as[String])
+        println(s"${userType} Role: " + session("role").as[String])
+        session
+    }
   }
 
 }

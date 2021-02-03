@@ -6,7 +6,7 @@ import utils.{Environment, CsrfCheck}
 
 import scala.concurrent.duration._
 
-object Login {
+object CitizenLogin {
 
   val IdamURL = Environment.idamURL
 
@@ -24,7 +24,7 @@ object Login {
     group(s"Divorce_000_${appName}_Login") {
 
       exec(http(s"Login as ${appName}")
-        .post(IdamURL + "/login?client_id=divorce&response_type=code&redirect_uri=" + s"${BaseURL}" + "/authenticated&ui_locales=en&state=${state}")
+        .post(IdamURL + "/login?client_id=divorce&response_type=code&redirect_uri=" + BaseURL + "/authenticated&ui_locales=en&state=${state}")
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("username", "${emailAddress}")

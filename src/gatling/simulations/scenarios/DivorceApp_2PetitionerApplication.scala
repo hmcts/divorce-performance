@@ -32,6 +32,9 @@ object DivorceApp_2PetitionerApplication {
           .set("petitionerLastName", "Petitioner" + Common.randomString(5))
           .set("respondentFirstName", "Perf " + Common.randomString(5))
           .set("respondentLastName", "Respondent" + Common.randomString(5))
+          .set("MarriageDay", Common.getDay())
+          .set("MarriageMonth", Common.getMonth())
+          .set("MarriageYear", Common.getMarriageYear())
           .set("separationDay", Common.getDay())
           .set("separationMonth", Common.getMonth())
           .set("separationYear", Common.getSeparationYear())
@@ -46,6 +49,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("divorceWho", "wife")
         .formParam("hidden-marriageIsSameSexCouple", "No")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("When did you get married")))
     }
 
@@ -57,10 +61,11 @@ object DivorceApp_2PetitionerApplication {
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
-        .formParam("marriageDateDay", Common.getDay())
-        .formParam("marriageDateMonth", Common.getMonth())
-        .formParam("marriageDateYear", Common.getMarriageYear())
+        .formParam("marriageDateDay", "${MarriageDay}")
+        .formParam("marriageDateMonth", "${MarriageMonth}")
+        .formParam("marriageDateYear", "${MarriageYear}")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("Did you marry your wife in the UK")))
     }
 
@@ -74,6 +79,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("_csrf", "${csrf}")
         .formParam("marriedInUk", "Yes")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("Check if you can get a divorce in England and Wales")))
     }
 
@@ -88,6 +94,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("jurisdictionPetitionerResidence", "Yes")
         .formParam("jurisdictionRespondentResidence", "Yes")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("You can use English or Welsh courts to get a divorce")))
     }
 
@@ -101,6 +108,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("_csrf", "${csrf}")
         .formParam("jurisdictionConfidentLegal", "Yes")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("Do you need your address kept private")))
     }
 
@@ -114,6 +122,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("_csrf", "${csrf}")
         .formParam("petitionerContactDetailsConfidential", "share")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("Enter your current names")))
     }
 
@@ -130,6 +139,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("respondentFirstName", "${respondentFirstName}")
         .formParam("respondentLastName", "${respondentLastName}")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("How are your names displayed on the marriage certificate")))
     }
 
@@ -144,6 +154,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("marriagePetitionerName", "${petitionerFirstName} ${petitionerLastName}")
         .formParam("marriageRespondentName", "${respondentFirstName} ${respondentLastName}")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("Have you changed your name since you got married")))
     }
 
@@ -158,6 +169,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("petitionerNameDifferentToMarriageCertificate", "No")
         .formParam("petitionerNameChangedHowOtherDetails", "")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("How the court will contact you")))
     }
 
@@ -173,6 +185,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("petitionerConsent", "Yes")
         .formParam("petitionerPhoneNumber", "")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("What is your home address")))
     }
 
@@ -189,6 +202,7 @@ object DivorceApp_2PetitionerApplication {
           .formParam("addressType", "postcode")
           .formParam("searchPostcode", "true")
           .formParam("addressConfirmed", "false")
+          .check(CsrfCheck.save)
           .check(substring("Pick an address"))
           .check(regex("<option value=([0-9]+) >").findRandom.saveAs("randomAddressIndex")))
     }
@@ -206,6 +220,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("searchPostcode", "false")
         .formParam("addressConfirmed", "false")
         .formParam("postcode", "${postcode}")
+        .check(CsrfCheck.save)
         .check(regex("""<input class="govuk-input" type="text" id="addressLine." name="addressLine." value="(.+)"""").findAll.saveAs("addressLines")))
     }
 
@@ -225,6 +240,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("addressType", "postcode")
         .formParam("addressConfirmed", "true")
         .formParam("postcode", "${postcode}")
+        .check(CsrfCheck.save)
         .check(substring("Do you want your divorce papers sent to this address")))
     }
 
@@ -238,6 +254,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("_csrf", "${csrf}")
         .formParam("petitionerCorrespondenceUseHomeAddress", "Yes")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("live at the same address")))
     }
 
@@ -251,6 +268,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("_csrf", "${csrf}")
         .formParam("livingArrangementsLiveTogether", "Yes")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("divorce papers should be sent")))
     }
 
@@ -264,6 +282,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("_csrf", "${csrf}")
         .formParam("respondentCorrespondenceUseHomeAddress", "Yes")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("Choose a reason for your divorce")))
     }
 
@@ -277,6 +296,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("_csrf", "${csrf}")
         .formParam("reasonForDivorce", "separation-5-years")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("When you separated")))
     }
 
@@ -295,6 +315,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("reasonForDivorceLivingApartMonth", "${separationMonth}")
         .formParam("reasonForDivorceLivingApartYear", "${separationYear}")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("Have you lived apart for the entire time since you separated")))
     }
 
@@ -308,6 +329,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("_csrf", "${csrf}")
         .formParam("livedApartEntireTime", "Yes")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("Other court cases related to your marriage")))
     }
 
@@ -322,6 +344,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("legalProceedings", "No")
         .formParam("legalProceedingsDetails", "")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("Dividing your money and property")))
     }
 
@@ -335,6 +358,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("_csrf", "${csrf}")
         .formParam("financialOrder", "No")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(substring("Do you want to apply to claim your divorce costs")))
     }
 
@@ -384,6 +408,7 @@ object DivorceApp_2PetitionerApplication {
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
         .formParam("submit", "Continue")
+        .check(CsrfCheck.save)
         .check(regex("Check your answers|Equality and diversity questions")))
     }
 
@@ -407,6 +432,7 @@ object DivorceApp_2PetitionerApplication {
         .formParam("_csrf", "${csrf}")
         .formParam("confirmPrayer", "Yes")
         .formParam("submit", "Submit and pay")
+        .check(CsrfCheck.save)
         .check(substring("The application fee is")))
     }
 
