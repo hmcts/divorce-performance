@@ -13,38 +13,82 @@ class Divorce_Pipeline extends Simulation {
     .inferHtmlResources()
     .silentResources
 
-  val NFDSimulation = scenario( "NFDSimulation")
+  val DivorceSimulation = scenario( "DivorceSimulation")
 
+    //This scenario covers an end to end Divorce application
+    
     .exitBlockOnFail {
 
-      /* PETITIONER CREATES A NEW APPLICATION */
+      /* 1. PETITIONER ANSWERS SCREENING QUESTIONS */
+      /* 2. PETITIONER CREATES A NEW APPLICATION */
       exec(
         CreateUser.CreateCitizen("Petitioner"),
-        Homepage.NFDHomepage(Environment.petitionerURL, "Petitioner"),
-        CitizenLogin.NFDLogin(Environment.petitionerURL, "Petitioner"),
-        DivorceApp_1PetitionerScreening.ScreeningQuestions,
-        DivorceApp_2PetitionerApplication.ApplicationQuestions,
-        CitizenLogout.NFDLogout(Environment. petitionerURL, "Petitioner"))
+        Homepage.DivorceHomepage(Environment.petitionerURL, "Petitioner"),
+        Login.DivorceLogin(Environment.petitionerURL, "PetitionerFE", "Petitioner"),
+        Divorce_1PetitionerScreening.ScreeningQuestions,
+        Divorce_2PetitionerApplication.ApplicationQuestions,
+        Logout.DivorceLogout(Environment. petitionerURL, "PetitionerFE")
+      )
       .exec(flushHttpCache)
       .exec(flushCookieJar)
 
-      /* CASEWORKER UPDATES THE APPLICATION (ISSUE AOS)*/
+      /* 3. CASEWORKER UPDATES THE APPLICATION (ISSUE AOS)*/
       .exec(
-        CaseworkerLogin.CWLogin, //Login to the petitioner frontend with a caseworker (CW) just to get a CW authToken
-        DivorceApp_3CaseworkerIssueAOS.IssueAOS
+        Homepage.DivorceHomepage(Environment.petitionerURL, "Caseworker"),
+        Login.DivorceLogin(Environment.petitionerURL, "PetitionerFE", "Caseworker"), //Login to petitioner frontend with a caseworker (CW) just to get a CW authToken
+        Divorce_3CaseworkerIssueAOS.IssueAOS,
+        Logout.DivorceLogout(Environment. petitionerURL, "PetitionerFE")
       )
-      /*
-      /* RESPONDENT RESPONDS TO THE APPLICATION */
+      .exec(flushHttpCache)
+      .exec(flushCookieJar)
+
+      /* 4. RESPONDENT RESPONDS TO THE APPLICATION */
       .exec(
         CreateUser.CreateCitizen("Respondent"),
-        Homepage.NFDHomepage(Environment.respondentURL, "Respondent"),
-        CitizenLogin.NFDLogin(Environment.respondentURL, "Respondent"),
-        CitizenLogout.NFDLogout(Environment.respondentURL, "Respondent"))
+        Homepage.DivorceHomepage(Environment.respondentURL, "Respondent"),
+        Login.DivorceLogin(Environment.respondentURL, "RespondentFE", "Respondent"),
+        Divorce_4RespondentResponds.Response,
+        Logout.DivorceLogout(Environment.respondentURL, "RespondentFE"))
       .exec(flushHttpCache)
       .exec(flushCookieJar)
- */
+
+      /* 5. PETITIONER COMPLETES DECREE NISI (DN) QUESTIONS */
+      exec(
+        Homepage.DivorceHomepage(Environment.decreeNisiURL, "Petitioner"),
+        Login.DivorceLogin(Environment.decreeNisiURL, "DecreeNisiFE", "Petitioner"),
+        Divorce_5PetitionerDecreeNisi.DecreeNisi,
+        Logout.DivorceLogout(Environment.decreeNisiURL, "DecreeNisiFE")
+      )
+      .exec(flushHttpCache)
+      .exec(flushCookieJar)
+
+      /* 6. LEGAL ADVISOR (JUDGE) UPDATES THE APPLICATION (GRANT DN)*/
+      .exec(
+        Homepage.DivorceHomepage(Environment.petitionerURL, "Legal"),
+        Login.DivorceLogin(Environment.petitionerURL, "PetitionerFE", "Legal"), //Login to petitioner frontend with a legal advisor just to get an authToken
+        Divorce_6LegalGrantDecreeNisi.GrantDN,
+        Logout.DivorceLogout(Environment. petitionerURL, "PetitionerFE")
+      )
+      .exec(flushHttpCache)
+      .exec(flushCookieJar)
+
+      /* 7. CASEWORKER UPDATES THE APPLICATION (GRANT DA)*/
+      .exec(
+        Homepage.DivorceHomepage(Environment.petitionerURL, "Caseworker"),
+        Login.DivorceLogin(Environment.petitionerURL, "PetitionerFE", "Caseworker"), //Login to petitioner frontend with a caseworker (CW) just to get a CW authToken
+        Divorce_7CaseworkerGrantDecreeAbsolute.GrantDA,
+        Logout.DivorceLogout(Environment. petitionerURL, "PetitionerFE")
+      )
+      .exec(flushHttpCache)
+      .exec(flushCookieJar)
 
     }
+    .exec {
+      session =>
+        println(session)
+        session
+    }
+
     //delete the petitioner and respondent accounts
     /*.doIf("${PetitionerEmailAddress.exists()}") {
       exec(DeleteUser.DeleteCitizen("${PetitionerEmailAddress}"))
@@ -56,7 +100,7 @@ class Divorce_Pipeline extends Simulation {
      */
 
   setUp(
-    NFDSimulation.inject(atOnceUsers(1))
+    DivorceSimulation.inject(atOnceUsers(1))
   ).protocols(httpProtocol)
     .assertions(global.successfulRequests.percent.is(100))
 

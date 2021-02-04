@@ -22,11 +22,11 @@ object Common {
   }
 
   def getDay(): String = {
-    (1 + rnd.nextInt(28)).toString.format(patternDay).reverse.padTo(2, '0').reverse
+    (1 + rnd.nextInt(28)).toString.format(patternDay).reverse.padTo(2, '0').reverse //pads single-digit dates with a leading zero
   }
 
   def getMonth(): String = {
-    (1 + rnd.nextInt(12)).toString.format(patternMonth).reverse.padTo(2, '0').reverse
+    (1 + rnd.nextInt(12)).toString.format(patternMonth).reverse.padTo(2, '0').reverse //pads single-digit dates with a leading zero
   }
 
   //15-39 years ago

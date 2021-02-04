@@ -6,9 +6,10 @@ import utils.Environment
 
 import scala.concurrent.duration._
 
-object DivorceApp_3CaseworkerIssueAOS {
+object Divorce_3CaseworkerIssueAOS {
 
   val DivorceAPIURL = Environment.divorceAPIURL
+  val IdamAPIURL = Environment.idamAPIURL
 
   val MinThinkTime = Environment.minThinkTime
   val MaxThinkTime = Environment.maxThinkTime
@@ -17,6 +18,11 @@ object DivorceApp_3CaseworkerIssueAOS {
   val PostHeader = Environment.postHeader
 
   val IssueAOS =
+
+    /*
+    The following calls are made using the Divorce APIs, rather than interacting with CCD.
+    They progress the case, updating it as a caseworker would ordinarily do manually through CCD.
+     */
 
     group("Div3CW_010_AddIssueEvent") {
       exec(http("Add Issue Event")
@@ -41,9 +47,18 @@ object DivorceApp_3CaseworkerIssueAOS {
         .header("Content-Type", "application/json")
         .header("Accept", "application/json")
         .body(StringBody("{}")).asJson
+        .check(jsonPath("$.case_data.AosLetterHolderId").saveAs("letterHolderId"))
         .check(jsonPath("$.state").is("AosAwaiting")))
     }
 
-      .pause(MinThinkTime seconds, MaxThinkTime seconds)
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .group("Div3CW_030_RetrievePIN") {
+      exec(http("Retrieve PIN")
+        .get(IdamAPIURL + "/testing-support/accounts/pin/${letterHolderId}")
+        .check(bodyString.saveAs("pin")))
+    }
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
 }

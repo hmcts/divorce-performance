@@ -7,7 +7,7 @@ import utils.{Common, Environment, CsrfCheck}
 import scala.concurrent.duration._
 import scala.util.Random
 
-object DivorceApp_2PetitionerApplication {
+object Divorce_2PetitionerApplication {
 
   val PetitionerURL = Environment.petitionerURL
   val PaymentURL = Environment.paymentURL
@@ -24,7 +24,11 @@ object DivorceApp_2PetitionerApplication {
 
   val ApplicationQuestions = {
 
-    //Generate petitioner and respondent names and separation date
+    /*
+    Petitioner application questions
+     */
+
+    //Generate petitioner and respondent names and separation/marriage dates (these are used multiple times throughout the flow)
     exec {
       session =>
         session
@@ -40,7 +44,7 @@ object DivorceApp_2PetitionerApplication {
           .set("separationYear", Common.getSeparationYear())
     }
 
-    .group("DivorceApp_070_DetailsSubmit") {
+    .group("Div2PetApp_010_DetailsSubmit") {
       exec(http("Details")
         .post(PetitionerURL + "/about-your-marriage/details")
         .headers(CommonHeader)
@@ -55,7 +59,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_080_DateOfMarriageSubmit") {
+    .group("Div2PetApp_020_DateOfMarriageSubmit") {
       exec(http("Date Of Marriage")
         .post(PetitionerURL + "/about-your-marriage/date-of-marriage-certificate")
         .headers(CommonHeader)
@@ -71,7 +75,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_090_InTheUKSubmit") {
+    .group("Div2PetApp_030_InTheUKSubmit") {
       exec(http("In The UK")
         .post(PetitionerURL + "/about-your-marriage/in-the-uk")
         .headers(CommonHeader)
@@ -85,7 +89,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_100_HabitualResidenceSubmit") {
+    .group("Div2PetApp_040_HabitualResidenceSubmit") {
       exec(http("Habitual Residence")
         .post(PetitionerURL + "/jurisdiction/habitual-residence")
         .headers(CommonHeader)
@@ -100,7 +104,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_110_InterstitialSubmit") {
+    .group("Div2PetApp_050_InterstitialSubmit") {
       exec(http("Interstitial")
         .post(PetitionerURL + "/jurisdiction/interstitial")
         .headers(CommonHeader)
@@ -114,7 +118,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_120_ConfidentialSubmit") {
+    .group("Div2PetApp_060_ConfidentialSubmit") {
       exec(http("Confidential")
         .post(PetitionerURL + "/petitioner-respondent/confidential")
         .headers(CommonHeader)
@@ -128,7 +132,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_130_NamesSubmit") {
+    .group("Div2PetApp_070_NamesSubmit") {
       exec(http("Names")
         .post(PetitionerURL + "/petitioner-respondent/names")
         .headers(CommonHeader)
@@ -145,7 +149,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_140_NamesOnCertSubmit") {
+    .group("Div2PetApp_080_NamesOnCertSubmit") {
       exec(http("Names On Certificate")
         .post(PetitionerURL + "/petitioner-respondent/names-on-certificate")
         .headers(CommonHeader)
@@ -160,7 +164,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_150_ChangedNameSubmit") {
+    .group("Div2PetApp_090_ChangedNameSubmit") {
       exec(http("Changed Name")
         .post(PetitionerURL + "/petitioner-respondent/changed-name")
         .headers(CommonHeader)
@@ -175,7 +179,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_160_ContactDetailsSubmit") {
+    .group("Div2PetApp_100_ContactDetailsSubmit") {
       exec(http("Contact Details")
         .post(PetitionerURL + "/petitioner-respondent/contact-details")
         .headers(CommonHeader)
@@ -191,7 +195,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_170_AddressPostcodeSubmit") {
+    .group("Div2PetApp_110_AddressPostcodeSubmit") {
       feed(postcodeFeeder)
         .exec(http("Address Postcode")
           .post(PetitionerURL + "/petitioner-respondent/address")
@@ -209,7 +213,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_180_AddressChooseSubmit") {
+    .group("Div2PetApp_120_AddressChooseSubmit") {
       exec(http("Address Choose")
         .post(PetitionerURL + "/petitioner-respondent/address")
         .headers(CommonHeader)
@@ -226,7 +230,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_190_AddressSubmit") {
+    .group("Div2PetApp_130_AddressSubmit") {
       exec(http("Address")
         .post(PetitionerURL + "/petitioner-respondent/address")
         .headers(CommonHeader)
@@ -246,7 +250,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_200_UseHomeAddressSubmit") {
+    .group("Div2PetApp_140_UseHomeAddressSubmit") {
       exec(http("Use Home Address")
         .post(PetitionerURL + "/petitioner-respondent/petitioner-correspondence/use-home-address")
         .headers(CommonHeader)
@@ -260,7 +264,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_210_LiveTogetherSubmit") {
+    .group("Div2PetApp_150_LiveTogetherSubmit") {
       exec(http("Live Together")
         .post(PetitionerURL + "/petitioner-respondent/live-together")
         .headers(CommonHeader)
@@ -274,7 +278,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_220_UseHomeAddressSubmit") {
+    .group("Div2PetApp_160_UseHomeAddressSubmit") {
       exec(http("Use Home Address")
         .post(PetitionerURL + "/petitioner-respondent/respondent-correspondence/use-home-address")
         .headers(CommonHeader)
@@ -288,7 +292,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_230_ReasonSubmit") {
+    .group("Div2PetApp_170_ReasonSubmit") {
       exec(http("Reason")
         .post(PetitionerURL + "/about-divorce/reason-for-divorce/reason")
         .headers(CommonHeader)
@@ -302,7 +306,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_240_SeparationDatesSubmit") {
+    .group("Div2PetApp_180_SeparationDatesSubmit") {
       exec(http("Separation Dates")
         .post(PetitionerURL + "/about-divorce/reason-for-divorce/separation-dates")
         .headers(CommonHeader)
@@ -321,7 +325,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_250_LivedApartSinceSubmit") {
+    .group("Div2PetApp_190_LivedApartSinceSubmit") {
       exec(http("Lived Apart Since")
         .post(PetitionerURL + "/about-divorce/reason-for-divorce/separation/lived-apart-since")
         .headers(CommonHeader)
@@ -335,7 +339,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_260_LegalProceedingsSubmit") {
+    .group("Div2PetApp_200_LegalProceedingsSubmit") {
       exec(http("Legal Proceedings")
         .post(PetitionerURL + "/about-divorce/legal-proceedings")
         .headers(CommonHeader)
@@ -350,7 +354,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_270_FinancialArrangementsSubmit") {
+    .group("Div2PetApp_210_FinancialArrangementsSubmit") {
       exec(http("Financial Arrangements")
         .post(PetitionerURL + "/about-divorce/financial/arrangements")
         .headers(CommonHeader)
@@ -364,7 +368,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_280_ClaimCostsSubmit") {
+    .group("Div2PetApp_220_ClaimCostsSubmit") {
       exec(http("Claim Costs")
         .post(PetitionerURL + "/about-divorce/claim-costs")
         .headers(CommonHeader)
@@ -378,7 +382,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_290_DocumentUpload") {
+    .group("Div2PetApp_230_DocumentUpload") {
       exec(http("Document Upload")
         .post(PetitionerURL + "/petitioner-respondent/marriage-certificate-upload?js=true&_csrf=${csrf}")
         .header("accept", "application/json")
@@ -401,7 +405,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_300_DocumentUploadSubmit") {
+    .group("Div2PetApp_240_DocumentUploadSubmit") {
       exec(http("Document Upload")
         .post(PetitionerURL + "/petitioner-respondent/marriage-certificate-upload")
         .headers(CommonHeader)
@@ -414,7 +418,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_310_CheckYourAnswers") {
+    .group("Div2PetApp_250_CheckYourAnswers") {
       exec(http("Check Your Answers")
         .get(PetitionerURL + "/check-your-answers")
         .headers(CommonHeader)
@@ -424,7 +428,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_320_CheckYourAnswersSubmit") {
+    .group("Div2PetApp_260_CheckYourAnswersSubmit") {
       exec(http("Check Your Answers")
         .post(PetitionerURL + "/check-your-answers")
         .headers(CommonHeader)
@@ -438,7 +442,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_330_ProceedToPayment") {
+    .group("Div2PetApp_270_ProceedToPayment") {
       exec(http("Proceed To Payment")
         .post(PetitionerURL + "/pay/online")
         .headers(CommonHeader)
@@ -452,8 +456,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_340_CheckCard") {
-
+    .group("Div2PetApp_280_CheckCard") {
       exec(http("Check Card")
         .post(PaymentURL + "/check_card/${ChargeId}")
         .headers(CommonHeader)
@@ -467,8 +470,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_350_CardDetailsSubmit") {
-
+    .group("Div2PetApp_290_CardDetailsSubmit") {
       exec(http("Card Details")
         .post(PaymentURL + "/card_details/${ChargeId}")
         .headers(CommonHeader)
@@ -492,7 +494,7 @@ object DivorceApp_2PetitionerApplication {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("DivorceApp_360_ConfirmPayment") {
+    .group("Div2PetApp_300_ConfirmPayment") {
       exec(http("Confirm Payment")
         .post(PaymentURL + "/card_details/${ChargeId}/confirm")
         .headers(CommonHeader)

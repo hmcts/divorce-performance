@@ -6,7 +6,7 @@ import utils.{Environment, CsrfCheck}
 
 import scala.concurrent.duration._
 
-object DivorceApp_4RespondentResponds {
+object Divorce_4RespondentResponds {
 
   val RespondentURL = Environment.respondentURL
 
@@ -16,7 +16,11 @@ object DivorceApp_4RespondentResponds {
   val CommonHeader = Environment.commonHeader
   val PostHeader = Environment.postHeader
 
-  val ScreeningQuestions =
+  val Response =
+
+    /*
+    Respondent questions
+     */
 
     group("Div4Resp_010_PinSubmit") {
       exec(http("Respond with PIN")
@@ -24,8 +28,8 @@ object DivorceApp_4RespondentResponds {
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
-        .formParam("referenceNumber", "1612265151712558")
-        .formParam("securityAccessCode", "SXEWT37M")
+        .formParam("referenceNumber", "${appId}")
+        .formParam("securityAccessCode", "${pin}")
         .check(substring("Respond to your")))
     }
 

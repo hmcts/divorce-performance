@@ -6,7 +6,7 @@ import utils.{Environment, CsrfCheck}
 
 import scala.concurrent.duration._
 
-object DivorceApp_1PetitionerScreening {
+object Divorce_1PetitionerScreening {
 
   val PetitionerURL = Environment.petitionerURL
 
@@ -17,6 +17,10 @@ object DivorceApp_1PetitionerScreening {
   val PostHeader = Environment.postHeader
 
   val ScreeningQuestions =
+
+    /*
+    Petitioner screening questions
+     */
 
     group("Div1PetScreen_010_LanguagePrefSubmit") {
       exec(http("Language Preference")
