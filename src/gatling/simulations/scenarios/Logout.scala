@@ -18,7 +18,7 @@ object Logout {
       doIfOrElse(appName.equals("RespondentFE")) {
         exec(_.set("suffix", "end"))
       } {
-        doIf(appName.equals("DecreeNisiFE")) {
+        doIf(appName.equals("DecreeNisiFE") || appName.equals("DecreeAbsoluteFE")) {
           exec(_.set("suffix", "exit"))
         }
       }

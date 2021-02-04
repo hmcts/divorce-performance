@@ -53,8 +53,10 @@ object Login {
         .formParam("_csrf", "${csrf}")
         //Not using the CsrfCheck.save function, as not all FE apps return a csrf token when logging in, so making it optional
         .check(regex("""name="_csrf" value="(.+)">""").optional.saveAs("csrf"))
+        //If logging into the Decree Absolute FE, capture the DA PDF reference
+        .check(regex("/document-download/certificateOfEntitlement([0-9]+).pdf").optional.saveAs("DaPdfCode"))
         //Check for homepage text on each FE app (Petitioner, Respondent, Decree Nisi, Decree Absolute), as this code is used for all of them
-        .check(regex("What language do you want us to use|Enter these details from the letter|You can continue with your divorce")))
+        .check(regex("What language do you want us to use|Enter these details from the letter|You can continue with your divorce|You are now divorced")))
     }
 
     .exec(getCookieValue(CookieKey("__auth-token").withDomain(BaseURL.replace("https://", "")).withSecure(true).saveAs("authToken")))

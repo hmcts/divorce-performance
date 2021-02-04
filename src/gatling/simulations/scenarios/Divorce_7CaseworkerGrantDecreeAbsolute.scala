@@ -85,13 +85,43 @@ object Divorce_7CaseworkerGrantDecreeAbsolute {
     }
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .group("Div7CW_050_AddDNPronouncedBulkEvent") {
+      exec(http("Add DN Pronounced Bulk Event")
+        .post(DivorceAPIURL + "/casemaintenance/version/1/updateCase/${appId}/dnPronouncedBulk")
+        .header("Authorization", "${authToken}")
+        .header("Content-Type", "application/json")
+        .header("Accept", "application/json")
+        .body(StringBody("{}")).asJson
+        .check(jsonPath("$.state").is("DNPronounced")))
+    }
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .group("Div7CW_060_AddEligibleForDAEvent") {
+      exec(http("Add Eligible For DA Event")
+        .post(DivorceAPIURL + "/casemaintenance/version/1/updateCase/${appId}/MakeEligibleForDA_Petitioner")
+        .header("Authorization", "${authToken}")
+        .header("Content-Type", "application/json")
+        .header("Accept", "application/json")
+        .body(StringBody("{}")).asJson
+        .check(jsonPath("$.state").is("AwaitingDecreeAbsolute")))
+    }
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
+    .group("Div7CW_070_AddDAGrantedEvent") {
+      exec(http("Add DA Granted Event")
+        .post(DivorceAPIURL + "/casemaintenance/version/1/updateCase/${appId}/daGranted")
+        .header("Authorization", "${authToken}")
+        .header("Content-Type", "application/json")
+        .header("Accept", "application/json")
+        .body(StringBody("{}")).asJson
+        .check(jsonPath("$.state").is("DivorceGranted")))
+    }
+
+    .pause(MinThinkTime seconds, MaxThinkTime seconds)
+
   }
-
-  //Run the ‘DN Pronounced by Bulk’ event
-  //The Decree Nisi document should now be under your Documents tab
-
-  //Run Eligible for DA Event
-
-  //Run DA Granted Event
 
 }

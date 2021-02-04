@@ -16,12 +16,15 @@ class Divorce_Pipeline extends Simulation {
   val DivorceSimulation = scenario( "DivorceSimulation")
 
     //This scenario covers an end to end Divorce application
-    
+
     .exitBlockOnFail {
+
+      exec(flushHttpCache)
+      .exec(flushCookieJar)
 
       /* 1. PETITIONER ANSWERS SCREENING QUESTIONS */
       /* 2. PETITIONER CREATES A NEW APPLICATION */
-      exec(
+      .exec(
         CreateUser.CreateCitizen("Petitioner"),
         Homepage.DivorceHomepage(Environment.petitionerURL, "Petitioner"),
         Login.DivorceLogin(Environment.petitionerURL, "PetitionerFE", "Petitioner"),
@@ -53,7 +56,7 @@ class Divorce_Pipeline extends Simulation {
       .exec(flushCookieJar)
 
       /* 5. PETITIONER COMPLETES DECREE NISI (DN) QUESTIONS */
-      exec(
+      .exec(
         Homepage.DivorceHomepage(Environment.decreeNisiURL, "Petitioner"),
         Login.DivorceLogin(Environment.decreeNisiURL, "DecreeNisiFE", "Petitioner"),
         Divorce_5PetitionerDecreeNisi.DecreeNisi,
@@ -78,6 +81,16 @@ class Divorce_Pipeline extends Simulation {
         Login.DivorceLogin(Environment.petitionerURL, "PetitionerFE", "Caseworker"), //Login to petitioner frontend with a caseworker (CW) just to get a CW authToken
         Divorce_7CaseworkerGrantDecreeAbsolute.GrantDA,
         Logout.DivorceLogout(Environment. petitionerURL, "PetitionerFE")
+      )
+      .exec(flushHttpCache)
+      .exec(flushCookieJar)
+
+      /* 8. PETITIONER DOWNLOADS DECREE ABSOLUTE (DA) PDF */
+      .exec(
+        Homepage.DivorceHomepage(Environment.decreeAbsoluteURL, "Petitioner"),
+        Login.DivorceLogin(Environment.decreeAbsoluteURL, "DecreeAbsoluteFE", "Petitioner"),
+        Divorce_8PetitionerDownloadDA.DownloadDA,
+        Logout.DivorceLogout(Environment.decreeAbsoluteURL, "DecreeAbsoluteFE")
       )
       .exec(flushHttpCache)
       .exec(flushCookieJar)
