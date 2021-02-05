@@ -28,7 +28,7 @@ object Logout {
       exec(http(s"Logout from ${appName}")
         .get(BaseURL + "/${suffix}")
         .headers(CommonHeader)
-        .check(regex("Sign in or create an account|You’ve been signed out")))
+        .check(regex("Sign in or create an account|You(?:.+)ve been signed out")))
     }
 
   }

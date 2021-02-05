@@ -34,9 +34,14 @@ object Common {
     now.minusYears(15 + rnd.nextInt(40)).format(patternYear)
   }
 
-  //6-14 years ago
+  //7-14 years ago
   def getSeparationYear(): String = {
-    now.minusYears(6 + rnd.nextInt(9)).format(patternYear)
+    now.minusYears(7 + rnd.nextInt(8)).format(patternYear)
+  }
+
+  //2 years ago
+  def getCourtHearingYear(): String = {
+    now.minusYears(2).format(patternYear)
   }
 
   def getPostcode(): String = {

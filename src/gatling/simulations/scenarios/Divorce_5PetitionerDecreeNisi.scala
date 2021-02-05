@@ -80,7 +80,7 @@ object Divorce_5PetitionerDecreeNisi {
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
-        .formParam("changes.livedApartSinceSeparation", "no")
+        .formParam("changes.livedApartSinceSeparation", "yes")
         .formParam("changes.approximateDatesOfLivingTogetherField", "")
         .check(CsrfCheck.save)
         .check(substring("Do you need to upload any other documents")))

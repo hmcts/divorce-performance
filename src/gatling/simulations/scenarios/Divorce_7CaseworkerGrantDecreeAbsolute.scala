@@ -2,7 +2,7 @@ package scenarios
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
-import utils.Environment
+import utils.{Environment, Common}
 
 import scala.concurrent.duration._
 
@@ -24,7 +24,12 @@ object Divorce_7CaseworkerGrantDecreeAbsolute {
     They progress the case, updating it as a caseworker would ordinarily do manually through CCD.
      */
 
-    group("Div7CW_010_AddLinkedWithBulkCaseEvent") {
+    //set the court hearing date
+    exec(_.set("courtHearingDay", Common.getDay()))
+    .exec(_.set("courtHearingMonth", Common.getMonth()))
+    .exec(_.set("courtHearingYear", Common.getCourtHearingYear()))
+
+    .group("Div7CW_010_AddLinkedWithBulkCaseEvent") {
       exec(http("Add Linked With Bulk Case Event")
         .post(DivorceAPIURL + "/casemaintenance/version/1/updateCase/${appId}/linkBulkCaseReference")
         .header("Authorization", "${authToken}")
@@ -42,13 +47,18 @@ object Divorce_7CaseworkerGrantDecreeAbsolute {
         .header("Authorization", "${authToken}")
         .header("Content-Type", "application/json")
         .header("Accept", "application/json")
-        .body(StringBody("""{"DecreeNisiGranted": "Yes",
-                "CourtName": "nottingham",
-                "DateAndTimeOfHearing": "[{"id": "",
-                                           "value": {"DateOfHearing": "2020-01-01",
-                                                     "TimeOfHearing": ""}
-                                                    }
-                                          }]"}""")).asJson
+        .body(StringBody("""{
+                           |    "CourtName": "nottingham",
+                           |    "DateAndTimeOfHearing": [
+                           |      {
+                           |        "id": null,
+                           |        "value": {
+                           |          "DateOfHearing": "${courtHearingYear}-${courtHearingMonth}-${courtHearingDay}",
+                           |          "TimeOfHearing": null
+                           |        }
+                           |      }
+                           |    ]
+                           |  }""".stripMargin)).asJson
         .check(jsonPath("$.case_data.CourtName").is("nottingham"))
         .check(jsonPath("$.state").is("AwaitingPronouncement")))
     }
@@ -66,8 +76,8 @@ object Divorce_7CaseworkerGrantDecreeAbsolute {
         .header("Authorization", "${authToken}")
         .header("Content-Type", "application/json")
         .header("Accept", "application/json")
-        .body(StringBody("""{"DecreeNisiGrantedDate":"2020-01-01"}""")).asJson
-        .check(jsonPath("$.case_data.DecreeNisiGrantedDate").is("2020-01-01"))
+        .body(StringBody("""{"DecreeNisiGrantedDate":"${courtHearingYear}-${courtHearingMonth}-${courtHearingDay}"}""")).asJson
+        .check(jsonPath("$.case_data.DecreeNisiGrantedDate").is("${courtHearingYear}-${courtHearingMonth}-${courtHearingDay}"))
         .check(jsonPath("$.state").is("AwaitingPronouncement")))
     }
 
