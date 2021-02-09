@@ -238,8 +238,8 @@ object Divorce_2PetitionerApplication {
         .formParam("_csrf", "${csrf}")
         .formParam("addressLine0", "${addressLines(0)}")
         .formParam("addressLine1", "${addressLines(1)}")
-        .formParam("addressLine2", "${addressLines(2)}")
-        //.formParam("addressLine3", "${addressLines(3)}") //removing this as not all postcodes return 4 lines
+        .formParam("addressLine2", "${addressLines(3)}") //removing line 2 as not all postcodes return 4 lines
+        //.formParam("addressLine3", "${addressLines(3)}")
         .formParam("addressLine3", "")
         .formParam("addressType", "postcode")
         .formParam("addressConfirmed", "true")
