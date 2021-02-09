@@ -225,7 +225,9 @@ object Divorce_2PetitionerApplication {
         .formParam("addressConfirmed", "false")
         .formParam("postcode", "${postcode}")
         .check(CsrfCheck.save)
-        .check(regex("""<input class="govuk-input" type="text" id="addressLine." name="addressLine." value="(.+)"""").findAll.saveAs("addressLines")))
+        //capture tuples of address values (key, value) e.g. ("addressLine0", "1 Perf Road"), ("addressLine1", "Perf Town"), ("addressLine2", "PR1 1RF")
+        //this allows a dynamic number of address lines to be captured and submitted to the next call
+        .check(regex("""<input class="govuk-input" type="text" id="addressLine." name="(.+)" value="(.+)"""").ofType[(String, String)].findAll.saveAs("addressLines")))
     }
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
@@ -236,11 +238,7 @@ object Divorce_2PetitionerApplication {
         .headers(CommonHeader)
         .headers(PostHeader)
         .formParam("_csrf", "${csrf}")
-        .formParam("addressLine0", "${addressLines(0)}")
-        .formParam("addressLine1", "${addressLines(1)}")
-        .formParam("addressLine2", "${addressLines(3)}") //removing line 2 as not all postcodes return 4 lines
-        //.formParam("addressLine3", "${addressLines(3)}")
-        .formParam("addressLine3", "")
+        .formParamSeq("${addressLines}") //submit the tuple seq captured from the previous call (i.e. all the lines of the address)
         .formParam("addressType", "postcode")
         .formParam("addressConfirmed", "true")
         .formParam("postcode", "${postcode}")
