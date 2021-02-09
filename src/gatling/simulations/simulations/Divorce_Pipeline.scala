@@ -96,21 +96,20 @@ class Divorce_Pipeline extends Simulation {
       .exec(flushCookieJar)
 
     }
-    .exec {
-      session =>
-        println(session)
-        session
-    }
 
     //delete the petitioner and respondent accounts
-    /*.doIf("${PetitionerEmailAddress.exists()}") {
+    .doIf("${PetitionerEmailAddress.exists()}") {
       exec(DeleteUser.DeleteCitizen("${PetitionerEmailAddress}"))
     }
     .doIf("${RespondentEmailAddress.exists()}") {
       exec(DeleteUser.DeleteCitizen("${RespondentEmailAddress}"))
     }
 
-     */
+    .exec {
+      session =>
+        println(session)
+        session
+    }
 
   setUp(
     DivorceSimulation.inject(atOnceUsers(1))
