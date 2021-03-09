@@ -52,7 +52,7 @@ gatling {
   toolVersion '3.3.1'
   scalaVersion '2.12.12'
   simulations = [
-          'simulations.Divorce_Pipeline'
+          'simulations.Divorce_NewApplication'
   ]
 }
 

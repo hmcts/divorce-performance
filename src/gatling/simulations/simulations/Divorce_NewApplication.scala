@@ -6,7 +6,7 @@ import io.gatling.core.scenario.Simulation
 import scenarios._
 import utils.Environment
 
-class Divorce_Pipeline extends Simulation {
+class Divorce_NewApplication extends Simulation {
 
   val httpProtocol = Environment.HttpProtocol
     .doNotTrackHeader("1")
