@@ -30,7 +30,7 @@ object Login {
       }
     } {
       doIfOrElse(userType.equals("Caseworker")) {
-        exec(_.set("emailAddress", "ccdloadtest1@gmail.com"))
+        exec(_.set("emailAddress", "ccdloadtest-cw@gmail.com"))
           .exec(_.set("password", "Password12"))
       }
       {
