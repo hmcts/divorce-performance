@@ -37,10 +37,10 @@ class Divorce_NewApplication extends Simulation {
       /* 2. PETITIONER CREATES A NEW APPLICATION */
       .exec(
         CreateUser.CreateCitizen("Petitioner"),
-        Homepage.DivorceHomepage(Environment.petitionerURL, "Petitioner"),
+        Homepage.DivorceHomepage(Environment.petitionerURL, "PetitionerFE"),
         Login.DivorceLogin(Environment.petitionerURL, "PetitionerFE", "Petitioner"),
-        Divorce_1PetitionerScreening.ScreeningQuestions,
-        Divorce_2PetitionerApplication.ApplicationQuestions,
+        Divorce_01PetitionerScreening.ScreeningQuestions,
+        Divorce_02PetitionerApplication.ApplicationQuestions,
         Logout.DivorceLogout(Environment. petitionerURL, "PetitionerFE")
       )
       .exec(flushHttpCache)
@@ -48,9 +48,9 @@ class Divorce_NewApplication extends Simulation {
 
       /* 3. CASEWORKER UPDATES THE APPLICATION (ISSUE AOS)*/
       .exec(
-        Homepage.DivorceHomepage(Environment.petitionerURL, "Caseworker"),
+        Homepage.DivorceHomepage(Environment.petitionerURL, "PetitionerFE"),
         Login.DivorceLogin(Environment.petitionerURL, "PetitionerFE", "Caseworker"), //Login to petitioner frontend with a caseworker (CW) just to get a CW authToken
-        Divorce_3CaseworkerIssueAOS.IssueAOS,
+        Divorce_03CaseworkerIssueAOS.IssueAOS,
         Logout.DivorceLogout(Environment. petitionerURL, "PetitionerFE")
       )
       .exec(flushHttpCache)
@@ -59,18 +59,18 @@ class Divorce_NewApplication extends Simulation {
       /* 4. RESPONDENT RESPONDS TO THE APPLICATION */
       .exec(
         CreateUser.CreateCitizen("Respondent"),
-        Homepage.DivorceHomepage(Environment.respondentURL, "Respondent"),
+        Homepage.DivorceHomepage(Environment.respondentURL, "RespondentFE"),
         Login.DivorceLogin(Environment.respondentURL, "RespondentFE", "Respondent"),
-        Divorce_4RespondentResponds.Response,
+        Divorce_04RespondentResponds.Response,
         Logout.DivorceLogout(Environment.respondentURL, "RespondentFE"))
       .exec(flushHttpCache)
       .exec(flushCookieJar)
 
       /* 5. PETITIONER COMPLETES DECREE NISI (DN) QUESTIONS */
       .exec(
-        Homepage.DivorceHomepage(Environment.decreeNisiURL, "Petitioner"),
+        Homepage.DivorceHomepage(Environment.decreeNisiURL, "DecreeNisiFE"),
         Login.DivorceLogin(Environment.decreeNisiURL, "DecreeNisiFE", "Petitioner"),
-        Divorce_5PetitionerDecreeNisi.DecreeNisi,
+        Divorce_05PetitionerDecreeNisi.DecreeNisi,
         Logout.DivorceLogout(Environment.decreeNisiURL, "DecreeNisiFE")
       )
       .exec(flushHttpCache)
@@ -78,36 +78,56 @@ class Divorce_NewApplication extends Simulation {
 
       /* 6. LEGAL ADVISOR (JUDGE) UPDATES THE APPLICATION (GRANT DN)*/
       .exec(
-        Homepage.DivorceHomepage(Environment.petitionerURL, "Legal"),
+        Homepage.DivorceHomepage(Environment.petitionerURL, "PetitionerFE"),
         Login.DivorceLogin(Environment.petitionerURL, "PetitionerFE", "Legal"), //Login to petitioner frontend with a legal advisor just to get an authToken
-        Divorce_6LegalGrantDecreeNisi.GrantDN,
+        Divorce_06LegalGrantDecreeNisi.GrantDN,
         Logout.DivorceLogout(Environment. petitionerURL, "PetitionerFE")
       )
       .exec(flushHttpCache)
       .exec(flushCookieJar)
 
-      /* 7. CASEWORKER UPDATES THE APPLICATION (GRANT DA)*/
+      /* 7. CASEWORKER UPDATES THE APPLICATION (MAKE ELIGIBLE FOR DA)*/
       .exec(
-        Homepage.DivorceHomepage(Environment.petitionerURL, "Caseworker"),
+        Homepage.DivorceHomepage(Environment.petitionerURL, "PetitionerFE"),
         Login.DivorceLogin(Environment.petitionerURL, "PetitionerFE", "Caseworker"), //Login to petitioner frontend with a caseworker (CW) just to get a CW authToken
-        Divorce_7CaseworkerGrantDecreeAbsolute.GrantDA,
+        Divorce_07CaseworkerMakeEligibleForDA.MakeEligibleForDA,
         Logout.DivorceLogout(Environment. petitionerURL, "PetitionerFE")
       )
       .exec(flushHttpCache)
       .exec(flushCookieJar)
 
-      /* 8. PETITIONER DOWNLOADS DECREE ABSOLUTE (DA) PDF */
+      /* 8. PETITIONER COMPLETES DECREE ABSOLUTE (DA) QUESTIONS */
       .exec(
-        Homepage.DivorceHomepage(Environment.decreeAbsoluteURL, "Petitioner"),
+        Homepage.DivorceHomepage(Environment.decreeAbsoluteURL, "DecreeAbsoluteFE"),
         Login.DivorceLogin(Environment.decreeAbsoluteURL, "DecreeAbsoluteFE", "Petitioner"),
-        Divorce_8PetitionerDownloadDA.DownloadDA,
+        Divorce_08PetitionerDecreeAbsolute.DecreeAbsolute,
+        Logout.DivorceLogout(Environment.decreeAbsoluteURL, "DecreeAbsoluteFE")
+      )
+      .exec(flushHttpCache)
+      .exec(flushCookieJar)
+
+      /* 9. CASEWORKER UPDATES THE APPLICATION (GRANT DECREE ABSOLUTE)*/
+      .exec(
+        Homepage.DivorceHomepage(Environment.petitionerURL, "PetitionerFE"),
+        Login.DivorceLogin(Environment.petitionerURL, "PetitionerFE", "Caseworker"), //Login to petitioner frontend with a caseworker (CW) just to get a CW authToken
+        Divorce_09CaseworkerGrantDecreeAbsolute.GrantDA,
+        Logout.DivorceLogout(Environment. petitionerURL, "PetitionerFE")
+      )
+      .exec(flushHttpCache)
+      .exec(flushCookieJar)
+
+      /* 10. PETITIONER DOWNLOADS DECREE ABSOLUTE (DA) PDF */
+      .exec(
+        Homepage.DivorceHomepage(Environment.decreeAbsoluteURL, "DecreeAbsoluteFE"),
+        Login.DivorceLogin(Environment.decreeAbsoluteURL, "DecreeAbsoluteFE", "Petitioner"),
+        Divorce_10PetitionerDownloadDA.DownloadDA,
         Logout.DivorceLogout(Environment.decreeAbsoluteURL, "DecreeAbsoluteFE")
       )
       .exec(flushHttpCache)
       .exec(flushCookieJar)
 
     }
-
+/*
     //delete the petitioner and respondent accounts
     .doIf("${PetitionerEmailAddress.exists()}") {
       exec(DeleteUser.DeleteCitizen("${PetitionerEmailAddress}"))
@@ -115,19 +135,19 @@ class Divorce_NewApplication extends Simulation {
     .doIf("${RespondentEmailAddress.exists()}") {
       exec(DeleteUser.DeleteCitizen("${RespondentEmailAddress}"))
     }
-
+*/
     .exec {
       session =>
         println(session)
         session
     }
 
-/*
+
   setUp(
     DivorceSimulation.inject(atOnceUsers(1))
   ).protocols(httpProtocol)
- */
 
+/*
   setUp(
     DivorceSimulation.inject(
       rampUsersPerSec(0.00) to (divorceRatePerSec) during (rampUpDurationMins minutes),
@@ -136,5 +156,6 @@ class Divorce_NewApplication extends Simulation {
     )
   )
   .protocols(httpProtocol)
+ */
 
 }

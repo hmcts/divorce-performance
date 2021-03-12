@@ -6,7 +6,7 @@ import utils.{Environment, CsrfCheck}
 
 import scala.concurrent.duration._
 
-object Divorce_4RespondentResponds {
+object Divorce_04RespondentResponds {
 
   val RespondentURL = Environment.respondentURL
 
@@ -22,7 +22,7 @@ object Divorce_4RespondentResponds {
     Respondent questions
      */
 
-    group("Div4Resp_010_PinSubmit") {
+    group("Div04Resp_010_PinSubmit") {
       exec(http("Respond with PIN")
         .post(RespondentURL + "/respond-with-pin")
         .headers(CommonHeader)
@@ -35,7 +35,7 @@ object Divorce_4RespondentResponds {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div4Resp_020_Respond") {
+    .group("Div04Resp_020_Respond") {
       exec(http("Respond")
         .post(RespondentURL + "/respond")
         .headers(CommonHeader)
@@ -46,7 +46,7 @@ object Divorce_4RespondentResponds {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div4Resp_030_ReviewApplication") {
+    .group("Div04Resp_030_ReviewApplication") {
       exec(http("Review Application")
         .post(RespondentURL + "/review-application")
         .headers(CommonHeader)
@@ -59,7 +59,7 @@ object Divorce_4RespondentResponds {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div4Resp_040_LanguagePrefSubmit") {
+    .group("Div04Resp_040_LanguagePrefSubmit") {
       exec(http("Language Preference")
         .post(RespondentURL + "/language-preference")
         .headers(CommonHeader)
@@ -72,7 +72,7 @@ object Divorce_4RespondentResponds {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div4Resp_050_ChooseAResponseSubmit") {
+    .group("Div04Resp_050_ChooseAResponseSubmit") {
       exec(http("Choose A Response")
         .post(RespondentURL + "/choose-a-response")
         .headers(CommonHeader)
@@ -85,7 +85,7 @@ object Divorce_4RespondentResponds {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div4Resp_060_DelayTheDecreeSubmit") {
+    .group("Div04Resp_060_DelayTheDecreeSubmit") {
       exec(http("Delay The Decree")
         .post(RespondentURL + "/delay-the-decree")
         .headers(CommonHeader)
@@ -98,7 +98,7 @@ object Divorce_4RespondentResponds {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div4Resp_070_JurisdictionSubmit") {
+    .group("Div04Resp_070_JurisdictionSubmit") {
       exec(http("Jurisdiction")
         .post(RespondentURL + "/jurisdiction")
         .headers(CommonHeader)
@@ -113,7 +113,7 @@ object Divorce_4RespondentResponds {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div4Resp_080_LegalProceedingsSubmit") {
+    .group("Div04Resp_080_LegalProceedingsSubmit") {
       exec(http("Legal Proceedings")
         .post(RespondentURL + "/legal-proceedings")
         .headers(CommonHeader)
@@ -127,7 +127,7 @@ object Divorce_4RespondentResponds {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div4Resp_090_ContactDetailsSubmit") {
+    .group("Div04Resp_090_ContactDetailsSubmit") {
       exec(http("Contact Details")
         .post(RespondentURL + "/contact-details")
         .headers(CommonHeader)
@@ -141,7 +141,7 @@ object Divorce_4RespondentResponds {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div4Resp_100_CheckYourAnswers") {
+    .group("Div04Resp_100_CheckYourAnswers") {
       exec(http("Check Your Answers")
         .get(RespondentURL + "/check-your-answers")
         .headers(CommonHeader)
@@ -151,7 +151,7 @@ object Divorce_4RespondentResponds {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div4Resp_110_CheckYourAnswersSubmit") {
+    .group("Div04Resp_110_CheckYourAnswersSubmit") {
       exec(http("Check Your Answers")
         .post(RespondentURL + "/check-your-answers")
         .headers(CommonHeader)

@@ -6,7 +6,7 @@ import utils.Environment
 
 import scala.concurrent.duration._
 
-object Divorce_6LegalGrantDecreeNisi {
+object Divorce_06LegalGrantDecreeNisi {
 
   val DivorceAPIURL = Environment.divorceAPIURL
   val IdamAPIURL = Environment.idamAPIURL
@@ -24,7 +24,7 @@ object Divorce_6LegalGrantDecreeNisi {
     It progresses the case, updating it as a legal advisor (e.g. judge) would ordinarily do manually through CCD.
      */
 
-    group("Div6Legal_010_AddDecisionEvent") {
+    group("Div06Legal_010_AddDecisionEvent") {
       exec(http("Add Decision Event")
         .post(DivorceAPIURL + "/casemaintenance/version/1/updateCase/${appId}/grantDnMakeDecision")
         .header("Authorization", "${authToken}")

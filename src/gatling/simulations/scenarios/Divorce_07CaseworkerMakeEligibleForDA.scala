@@ -6,7 +6,7 @@ import utils.{Environment, Common}
 
 import scala.concurrent.duration._
 
-object Divorce_7CaseworkerGrantDecreeAbsolute {
+object Divorce_07CaseworkerMakeEligibleForDA {
 
   val DivorceAPIURL = Environment.divorceAPIURL
   val IdamAPIURL = Environment.idamAPIURL
@@ -17,7 +17,7 @@ object Divorce_7CaseworkerGrantDecreeAbsolute {
   val CommonHeader = Environment.commonHeader
   val PostHeader = Environment.postHeader
 
-  val GrantDA = {
+  val MakeEligibleForDA = {
 
     /*
     The following calls are made using the Divorce APIs, rather than interacting with CCD.
@@ -29,7 +29,7 @@ object Divorce_7CaseworkerGrantDecreeAbsolute {
     .exec(_.set("courtHearingMonth", Common.getMonth()))
     .exec(_.set("courtHearingYear", Common.getCourtHearingYear()))
 
-    .group("Div7CW_010_AddLinkedWithBulkCaseEvent") {
+    .group("Div07CW_010_AddLinkedWithBulkCaseEvent") {
       exec(http("Add Linked With Bulk Case Event")
         .post(DivorceAPIURL + "/casemaintenance/version/1/updateCase/${appId}/linkBulkCaseReference")
         .header("Authorization", "${authToken}")
@@ -41,7 +41,7 @@ object Divorce_7CaseworkerGrantDecreeAbsolute {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div7CW_020_AddUpdateCaseWithCourtHearingEvent") {
+    .group("Div07CW_020_AddUpdateCaseWithCourtHearingEvent") {
       exec(http("Add Update Case With Court Hearing Event")
         .post(DivorceAPIURL + "/casemaintenance/version/1/updateCase/${appId}/updateBulkCaseHearingDetails")
         .header("Authorization", "${authToken}")
@@ -70,7 +70,7 @@ object Divorce_7CaseworkerGrantDecreeAbsolute {
       A DN granted date is added, as well as the judge's name
      */
 
-    .group("Div7CW_030_AddDNGrantedDate") {
+    .group("Div07CW_030_AddDNGrantedDate") {
       exec(http("Add DN Granted Date")
         .post(DivorceAPIURL + "/casemaintenance/version/1/updateCase/${appId}/amendCase")
         .header("Authorization", "${authToken}")
@@ -83,7 +83,7 @@ object Divorce_7CaseworkerGrantDecreeAbsolute {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div7CW_040_AddPronouncementJudge") {
+    .group("Div07CW_040_AddPronouncementJudge") {
       exec(http("Add Pronouncement Judge")
         .post(DivorceAPIURL + "/casemaintenance/version/1/updateCase/${appId}/amendCase")
         .header("Authorization", "${authToken}")
@@ -96,7 +96,7 @@ object Divorce_7CaseworkerGrantDecreeAbsolute {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div7CW_050_AddDNPronouncedBulkEvent") {
+    .group("Div07CW_050_AddDNPronouncedBulkEvent") {
       exec(http("Add DN Pronounced Bulk Event")
         .post(DivorceAPIURL + "/casemaintenance/version/1/updateCase/${appId}/dnPronouncedBulk")
         .header("Authorization", "${authToken}")
@@ -108,7 +108,7 @@ object Divorce_7CaseworkerGrantDecreeAbsolute {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div7CW_060_AddEligibleForDAEvent") {
+    .group("Div07CW_060_AddEligibleForDAEvent") {
       exec(http("Add Eligible For DA Event")
         .post(DivorceAPIURL + "/casemaintenance/version/1/updateCase/${appId}/MakeEligibleForDA_Petitioner")
         .header("Authorization", "${authToken}")
@@ -116,18 +116,6 @@ object Divorce_7CaseworkerGrantDecreeAbsolute {
         .header("Accept", "application/json")
         .body(StringBody("{}")).asJson
         .check(jsonPath("$.state").is("AwaitingDecreeAbsolute")))
-    }
-
-    .pause(MinThinkTime seconds, MaxThinkTime seconds)
-
-    .group("Div7CW_070_AddDAGrantedEvent") {
-      exec(http("Add DA Granted Event")
-        .post(DivorceAPIURL + "/casemaintenance/version/1/updateCase/${appId}/daGranted")
-        .header("Authorization", "${authToken}")
-        .header("Content-Type", "application/json")
-        .header("Accept", "application/json")
-        .body(StringBody("{}")).asJson
-        .check(jsonPath("$.state").is("DivorceGranted")))
     }
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)

@@ -6,7 +6,7 @@ import utils.{CsrfCheck, Environment}
 
 import scala.concurrent.duration._
 
-object Divorce_5PetitionerDecreeNisi {
+object Divorce_05PetitionerDecreeNisi {
 
   val DecreeNisiURL = Environment.decreeNisiURL
 
@@ -22,7 +22,7 @@ object Divorce_5PetitionerDecreeNisi {
     Petitioner AOS/DN questions
      */
 
-    group("Div5PetDN_010_ProgressBar") {
+    group("Div05PetDN_010_ProgressBar") {
       exec(http("Progress Bar")
         .post(DecreeNisiURL + "/progress-bar/petitioner")
         .headers(CommonHeader)
@@ -33,7 +33,7 @@ object Divorce_5PetitionerDecreeNisi {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div5PetDN_020_ReviewAOSResponse") {
+    .group("Div05PetDN_020_ReviewAOSResponse") {
       exec(http("Review AOS Response")
         .post(DecreeNisiURL + "/review-aos-response")
         .headers(CommonHeader)
@@ -46,7 +46,7 @@ object Divorce_5PetitionerDecreeNisi {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div5PetDN_030_ContinueWithDivorce") {
+    .group("Div05PetDN_030_ContinueWithDivorce") {
       exec(http("Continue With Divorce")
         .post(DecreeNisiURL + "/continue-with-divorce")
         .headers(CommonHeader)
@@ -59,7 +59,7 @@ object Divorce_5PetitionerDecreeNisi {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div5PetDN_040_ReviewYourPetitionSubmit") {
+    .group("Div05PetDN_040_ReviewYourPetitionSubmit") {
       exec(http("Review Your Petition")
         .post(DecreeNisiURL + "/review-your-petition")
         .headers(CommonHeader)
@@ -74,7 +74,7 @@ object Divorce_5PetitionerDecreeNisi {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div5PetDN_050_LivedApartSubmit") {
+    .group("Div05PetDN_050_LivedApartSubmit") {
       exec(http("Lived Apart")
         .post(DecreeNisiURL + "/lived-apart-since-separation")
         .headers(CommonHeader)
@@ -88,7 +88,7 @@ object Divorce_5PetitionerDecreeNisi {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div5PetDN_060_ShareCourtDocumentsSubmit") {
+    .group("Div05PetDN_060_ShareCourtDocumentsSubmit") {
       exec(http("Share Court Documents")
         .post(DecreeNisiURL + "/share-court-documents")
         .headers(CommonHeader)
@@ -101,7 +101,7 @@ object Divorce_5PetitionerDecreeNisi {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div5PetDN_070_CheckYourAnswersSubmit") {
+    .group("Div05PetDN_070_CheckYourAnswersSubmit") {
       exec(http("Check Your Answers")
         .post(DecreeNisiURL + "/check-your-answers")
         .headers(CommonHeader)

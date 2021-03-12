@@ -6,7 +6,7 @@ import utils.{CsrfCheck, Environment}
 
 import scala.concurrent.duration._
 
-object Divorce_8PetitionerDownloadDA {
+object Divorce_10PetitionerDownloadDA {
 
   val DecreeAbsoluteURL = Environment.decreeAbsoluteURL
 
@@ -22,11 +22,11 @@ object Divorce_8PetitionerDownloadDA {
     Petitioner download Decree Absolute PDF
      */
 
-    group("Div8PetDA_010_DownloadDAPDFSubmit") {
+    group("Div10PetDA_010_DownloadDAPDF") {
       exec(http("Download DA PDF")
-        .get(DecreeAbsoluteURL + "/document-download/certificateOfEntitlement${DaPdfCode}.pdf")
+        .get(DecreeAbsoluteURL + "/document-download/decreeAbsolute${appId}.pdf")
         .headers(CommonHeader)
-        .check(bodyString.transform(_.size > 40000).is(true))) //Check PDF is at least 40kb in size
+        .check(bodyString.transform(_.size > 60000).is(true))) //Check PDF is at least 60kb in size
     }
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)

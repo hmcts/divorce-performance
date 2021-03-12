@@ -6,7 +6,7 @@ import utils.{Environment, CsrfCheck}
 
 import scala.concurrent.duration._
 
-object Divorce_1PetitionerScreening {
+object Divorce_01PetitionerScreening {
 
   val PetitionerURL = Environment.petitionerURL
 
@@ -22,7 +22,7 @@ object Divorce_1PetitionerScreening {
     Petitioner screening questions
      */
 
-    group("Div1PetScreen_010_LanguagePrefSubmit") {
+    group("Div01PetScreen_010_LanguagePrefSubmit") {
       exec(http("Language Preference")
         .post(PetitionerURL + "/screening-questions/language-preference")
         .headers(CommonHeader)
@@ -36,7 +36,7 @@ object Divorce_1PetitionerScreening {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div1PetScreen_020_MarriageBrokenDownSubmit") {
+    .group("Div01PetScreen_020_MarriageBrokenDownSubmit") {
       exec(http("Marriage Broken")
         .post(PetitionerURL + "/screening-questions/has-marriage-broken")
         .headers(CommonHeader)
@@ -50,7 +50,7 @@ object Divorce_1PetitionerScreening {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div1PetScreen_030_RespondentAddressSubmit") {
+    .group("Div01PetScreen_030_RespondentAddressSubmit") {
       exec(http("Respondent Address")
         .post(PetitionerURL + "/screening-questions/respondent-address")
         .headers(CommonHeader)
@@ -64,7 +64,7 @@ object Divorce_1PetitionerScreening {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div1PetScreen_040_MarriageCertificateSubmit") {
+    .group("Div01PetScreen_040_MarriageCertificateSubmit") {
       exec(http("Marriage Certificate")
         .post(PetitionerURL + "/screening-questions/marriage-certificate")
         .headers(CommonHeader)
@@ -78,7 +78,7 @@ object Divorce_1PetitionerScreening {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div1PetScreen_050_FinancialRemedySubmit") {
+    .group("Div01PetScreen_050_FinancialRemedySubmit") {
       exec(http("Financial Remedy")
         .post(PetitionerURL + "/screening-questions/financial-remedy")
         .headers(CommonHeader)
@@ -91,7 +91,7 @@ object Divorce_1PetitionerScreening {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div1PetScreen_060_NeedHelpSubmit") {
+    .group("Div01PetScreen_060_NeedHelpSubmit") {
       exec(http("Need Help")
         .post(PetitionerURL + "/pay/help/need-help")
         .headers(CommonHeader)

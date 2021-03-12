@@ -6,7 +6,7 @@ import utils.Environment
 
 import scala.concurrent.duration._
 
-object Divorce_3CaseworkerIssueAOS {
+object Divorce_03CaseworkerIssueAOS {
 
   val DivorceAPIURL = Environment.divorceAPIURL
   val IdamAPIURL = Environment.idamAPIURL
@@ -24,7 +24,7 @@ object Divorce_3CaseworkerIssueAOS {
     They progress the case, updating it as a caseworker would ordinarily do manually through CCD.
      */
 
-    group("Div3CW_010_AddIssueEvent") {
+    group("Div03CW_010_AddIssueEvent") {
       exec(http("Add Issue Event")
         .post(DivorceAPIURL + "/casemaintenance/version/1/updateCase/${appId}/issueFromSubmitted")
         .header("Authorization", "${authToken}")
@@ -40,7 +40,7 @@ object Divorce_3CaseworkerIssueAOS {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div3CW_020_AddIssueAOSEvent") {
+    .group("Div03CW_020_AddIssueAOSEvent") {
       exec(http("Add Issue AOS Event")
         .post(DivorceAPIURL + "/casemaintenance/version/1/updateCase/${appId}/issueAos")
         .header("Authorization", "${authToken}")
@@ -53,7 +53,7 @@ object Divorce_3CaseworkerIssueAOS {
 
     .pause(MinThinkTime seconds, MaxThinkTime seconds)
 
-    .group("Div3CW_030_RetrievePIN") {
+    .group("Div03CW_030_RetrievePIN") {
       exec(http("Retrieve PIN")
         .get(IdamAPIURL + "/testing-support/accounts/pin/${letterHolderId}")
         .check(bodyString.saveAs("pin")))
