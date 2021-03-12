@@ -127,7 +127,7 @@ class Divorce_NewApplication extends Simulation {
       .exec(flushCookieJar)
 
     }
-/*
+
     //delete the petitioner and respondent accounts
     .doIf("${PetitionerEmailAddress.exists()}") {
       exec(DeleteUser.DeleteCitizen("${PetitionerEmailAddress}"))
@@ -135,19 +135,19 @@ class Divorce_NewApplication extends Simulation {
     .doIf("${RespondentEmailAddress.exists()}") {
       exec(DeleteUser.DeleteCitizen("${RespondentEmailAddress}"))
     }
-*/
+
     .exec {
       session =>
         println(session)
         session
     }
 
-
+/*
   setUp(
     DivorceSimulation.inject(atOnceUsers(1))
   ).protocols(httpProtocol)
+*/
 
-/*
   setUp(
     DivorceSimulation.inject(
       rampUsersPerSec(0.00) to (divorceRatePerSec) during (rampUpDurationMins minutes),
@@ -156,6 +156,6 @@ class Divorce_NewApplication extends Simulation {
     )
   )
   .protocols(httpProtocol)
- */
+
 
 }

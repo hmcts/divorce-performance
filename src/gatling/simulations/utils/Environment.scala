@@ -17,8 +17,8 @@ object Environment {
 
   val paymentURL = "https://www.payments.service.gov.uk"
 
-  val minThinkTime = 1
-  val maxThinkTime = 1
+  val minThinkTime = 5
+  val maxThinkTime = 7
 
   val HttpProtocol = http
 
