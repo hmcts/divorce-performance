@@ -14,16 +14,6 @@ class Divorce_NewApplication extends Simulation {
     .inferHtmlResources()
     .silentResources
 
-  val rampUpDurationMins = 5
-  val rampDownDurationMins = 5
-  val testDurationMins = 60
-
-  //Must be doubles to ensure the calculations result in doubles not rounded integers
-  val divorceHourlyTarget:Double = 45
-
-  val divorceRatePerSec = divorceHourlyTarget / 3600
-
-
   val DivorceSimulation = scenario( "DivorceSimulation")
 
     //This scenario covers an end to end Divorce application
@@ -142,20 +132,10 @@ class Divorce_NewApplication extends Simulation {
         session
     }
 
-/*
   setUp(
-    DivorceSimulation.inject(atOnceUsers(1))
+    DivorceSimulation.inject(rampUsers(10) during (2 minutes))
   ).protocols(httpProtocol)
-*/
-
-  setUp(
-    DivorceSimulation.inject(
-      rampUsersPerSec(0.00) to (divorceRatePerSec) during (rampUpDurationMins minutes),
-      constantUsersPerSec(divorceRatePerSec) during (testDurationMins minutes),
-      rampUsersPerSec(divorceRatePerSec) to (0.00) during (rampDownDurationMins minutes)
-    )
-  )
-  .protocols(httpProtocol)
+  .assertions(global.successfulRequests.percent.is(95))
 
 
 }

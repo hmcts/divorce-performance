@@ -30,13 +30,13 @@ object Login {
       }
     } {
       doIfOrElse(userType.equals("Caseworker")) {
-        exec(_.set("emailAddress", "ccdloadtest-cw@gmail.com"))
-          .exec(_.set("password", "Password12"))
+        exec(_.set("emailAddress", "divorce_as_caseworker_beta@mailinator.com"))
+          .exec(_.set("password", "Testing1234"))
       }
       {
         doIf(userType.equals("Legal")) {
-          exec(_.set("emailAddress", "ccdloadtest-la@gmail.com"))
-            .exec(_.set("password", "Password12"))
+          exec(_.set("emailAddress", "divorce_as_caseworker_la@mailinator.com"))
+            .exec(_.set("password", "Testing1234"))
         }
       }
     }
