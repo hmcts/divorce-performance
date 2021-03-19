@@ -14,6 +14,8 @@ class Divorce_NewApplication extends Simulation {
     .inferHtmlResources()
     .silentResources
 
+  val numberOfPipelineUsers = 10
+
   val DivorceSimulation = scenario( "DivorceSimulation")
 
     //This scenario covers an end to end Divorce application
@@ -133,9 +135,14 @@ class Divorce_NewApplication extends Simulation {
     }
 
   setUp(
-    DivorceSimulation.inject(rampUsers(10) during (2 minutes))
+    DivorceSimulation.inject(rampUsers(numberOfPipelineUsers) during (5 minutes))
   ).protocols(httpProtocol)
-  .assertions(global.successfulRequests.percent.gt(95))
+  .assertions(
+    //ensure at least 95% of attempted transactions have passed
+    global.successfulRequests.percent.gte(95),
+    //ensure that at least half of the users complete the journey end to end
+    details("Div10PetDA_010_DownloadDAPDF").successfulRequests.count.gte(numberOfPipelineUsers / 2)
+  )
 
 
 }
