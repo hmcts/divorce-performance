@@ -18,8 +18,8 @@ class Divorce_NewApplication extends Simulation {
   val rampDownDurationMins = 5
   val testDurationMins = 60
 
-  //Must be doubles to ensure the calculations result in doubles not rounded integers
-  val divorceHourlyTarget:Double = 45
+  //Must be a double to ensure the calculations result in a double not rounded integers
+  val divorceHourlyTarget:Double = 150 //was 45 originally
 
   val divorceRatePerSec = divorceHourlyTarget / 3600
 
