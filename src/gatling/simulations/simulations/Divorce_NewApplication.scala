@@ -135,7 +135,7 @@ class Divorce_NewApplication extends Simulation {
   setUp(
     DivorceSimulation.inject(rampUsers(10) during (2 minutes))
   ).protocols(httpProtocol)
-  .assertions(global.successfulRequests.percent.is(95))
+  .assertions(global.successfulRequests.percent.gt(95))
 
 
 }
