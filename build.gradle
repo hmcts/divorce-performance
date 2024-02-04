@@ -3,7 +3,7 @@ plugins {
   id 'scala'
   id 'com.github.lkishalmi.gatling' version '3.0.2'
   id 'groovy'
-  id 'com.gradle.plugin-publish' version '0.9.8'
+  id 'com.gradle.plugin-publish' version '0.21.0'
   id 'maven-publish'
 }
 
